@@ -10,5 +10,11 @@ download
 
 Gradle
 ```groovy
-    implementation 'com.github.alishatergholi:restclient:1.0.0'
+    repositories{
+        maven { url 'https://jitpack.io' }
+    }
+    
+    dependencies {
+        implementation 'com.github.alishatergholi:restclient:1.0.0'
+    }
 ```
