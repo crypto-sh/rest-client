@@ -21,7 +21,7 @@ Gradle
 ```
 How do i use RestClient
 =======================
-
+```java
     RestClient client = new RestClient
             .Builder(context)
             
@@ -64,5 +64,5 @@ How do i use RestClient
                             Log.d(TAG,"onFailure " + errorMsg);
                         }
                     }); 
-                    
+```
                     
