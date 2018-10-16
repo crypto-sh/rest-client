@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">library</string>
+
+    <string name="error_internet_access">internet access Error</string>
+    <string name="error_server_access">server access Error</string>
+    <string name="error_data_parse">data Parse Exception</string>
+    <string name="error_permission_denied">permission Denied </string>
+    <string name="error_authenticate_server">oauth exception</string>
+    <string name="error_loading_data">error parse Data</string>
+
+</resources>
