@@ -21,6 +21,14 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
     }
+    project.ext{
+        minSdkVersion = 15
+        targetSdkVersion = 28
+        compileSdkVersion  = 28
+        buildToolsVersion  = '28.0.3'
+        versionCode = 2
+        versionName = "1.0.1"
+    }
 }
 
 task clean(type: Delete) {

@@ -1,16 +1,14 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.github.dcendents.android-maven' // ADD THIS
 
-group='com.github.restclient'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion project.compileSdkVersion
     defaultConfig {
         applicationId "ir.vasl.restclient"
-        minSdkVersion 15
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.versionCode
+        versionName project.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
