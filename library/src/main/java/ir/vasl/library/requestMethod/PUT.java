@@ -11,7 +11,7 @@ import ir.vasl.library.Interface.ResultHandler;
 import ir.vasl.library.enums.ErrorCode;
 import ir.vasl.library.helper.general;
 import ir.vasl.library.model.AuthModel;
-import ir.vasl.library.oauth2library.OAuth2Client;
+import ir.vasl.library.oauth2.OAuth2Client;
 import ir.vasl.library.response.ResponseJsonHandler;
 import ir.vasl.library.response.ResponseTextHandler;
 import ir.vasl.library.utils.RequestParams;

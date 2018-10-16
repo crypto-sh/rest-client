@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import ir.vasl.library.helper.general;
 
-import ir.vasl.library.oauth2library.OAuthError;
+import ir.vasl.library.oauth2.OAuthError;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 

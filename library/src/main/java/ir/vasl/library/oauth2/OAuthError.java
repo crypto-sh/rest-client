@@ -1,4 +1,4 @@
-package ir.vasl.library.oauth2library;
+package ir.vasl.library.oauth2;
 
 public class OAuthError {
 

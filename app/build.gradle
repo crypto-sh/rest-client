@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.dcendents.android-maven' // ADD THIS
+
+group='com.github.restclient'
 
 android {
     compileSdkVersion 28

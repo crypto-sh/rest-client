@@ -1,13 +1,11 @@
-package ir.vasl.library.oauth2library;
+package ir.vasl.library.oauth2;
 
 
-import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 
 import java.io.IOException;
 
 import ir.vasl.library.Interface.AuthorizationParams;
-import ir.vasl.library.enums.AuthState;
 import ir.vasl.library.enums.AuthType;
 import ir.vasl.library.helper.general;
 import ir.vasl.library.model.OAuthResponse;
@@ -17,7 +15,6 @@ import okhttp3.FormBody;
 
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.Route;
 
 public class Access implements AuthorizationParams {
 
