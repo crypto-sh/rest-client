@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
+import android.util.Log;
 
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class POST extends baseMethod {
             @NonNull ResultHandler responder) {
         final Long startTime = getTimeMillisecond();
         try {
-            final Request.Builder request = new Request.Builder()
+            Request.Builder request = new Request.Builder()
                     .url(url)
                     .tag(tag)
                     .addHeader("cache-control"  , "no-cache")
@@ -49,12 +50,15 @@ public class POST extends baseMethod {
             if (responder instanceof ResponseTextHandler){
                 request.addHeader("Content-Type", "application/text");
                 request.addHeader("Accept", "application/text");
+                Log.d("MainActivity","TEXT");
             }else if (responder instanceof ResponseJsonHandler){
                 request.addHeader("Content-Type", "application/json");
                 request.addHeader("Accept", "application/json");
+                Log.d("MainActivity","JSON");
             }else {
                 request.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.addHeader("Accept", "application/octet-stream");
+                Log.d("MainActivity","Protocol Buffer");
             }
 
             ArrayMap<String, String> headers = authModel.getHeaders();
@@ -68,7 +72,9 @@ public class POST extends baseMethod {
             client.newCall(request.build()).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, final IOException e) {
-                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.ServerConnectionError));
+                    new Handler(Looper.getMainLooper()).post(() ->
+                            responder.onFailure(url,startTime,ErrorCode.ServerConnectionError)
+                    );
                 }
 
                 @Override
@@ -104,6 +110,7 @@ public class POST extends baseMethod {
                 } else {
                     new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.AuthorizationException));
                 }
+
             });
         } catch (Exception ex) {
             new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));

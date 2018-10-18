@@ -1,14 +1,20 @@
 package ir.vasl.restclient;
 
 
+import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import ir.vasl.library.RestClient;
 
+import ir.vasl.library.enums.AuthType;
 import ir.vasl.library.enums.EncodingType;
 
+import ir.vasl.library.response.ResponseJsonHandler;
 import ir.vasl.library.response.ResponseTextHandler;
 import ir.vasl.library.utils.RequestParams;
 
@@ -27,48 +33,57 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.text).setOnClickListener(view -> {
 
             RequestParams params = new RequestParams();
-            params.put("","");
+            params.put("", "");
 
 
-            restClient.POST("http://test.vaslapp.com/taniyar/services/api/v1/user/home",
+            restClient.POST("http://sandbox.vaslapp.com/api/v1/subscriber/loginbyusername",
                     "",
                     new RequestParams(),
-                    new ResponseTextHandler() {
+                    new ResponseJsonHandler() {
                         @Override
-                        protected void onSuccess(String result) {
-                            Log.d(TAG,result);
+                        protected void onSuccess(JSONObject result) {
+                            Log.d(TAG, "response " + result);
                         }
 
                         @Override
-                        public void onProgress(double percent, long bytesWritten, long totalSize) {
-                            super.onProgress(percent, bytesWritten, totalSize);
-                            Log.d(TAG,"percent " + percent);
+                        protected void onSuccess(JSONArray result) {
+
+                        }
+
+                        @Override
+                        protected void onSuccess(String result) {
+
                         }
 
                         @Override
                         public void onFailure(int errorCode, String errorMsg) {
-                            Log.d(TAG,"onFailure " + errorMsg);
+                            Log.d(TAG, "onFailure " + errorMsg);
                         }
                     }
             );
         });
 
 
-
+//        .Builder(getApplicationContext(),"")
+//                .setClientId("")
+//                .setClientSecret("")
+//                .setUserName("")
+//                .setPassword("")
+//                .setSite("")
+        ArrayMap<String, String> header = new ArrayMap<>();
+        header.put("appid", "c3bdf6c5-508f-48ae-9af4-243a24072e31");
+        header.put("accept-language", "fa");
 
         restClient = new RestClient.Builder(this)
-                .setAcceptEnconding(EncodingType.GZIP)
-                /* ArrayMap<String,String> header = new ArrayMap<>();
-                header.put("appid","0e8f8fd2-1acb-11e7-8ab0-ac162d7938f0");
-                header.put("accept-language", "fa");
+//                .setAcceptEnconding(EncodingType.GZIP)
+                .setAuthorization("http://sandbox.vaslapp.com/oauth/token",
+                        "c3bdf6c5-508f-48ae-9af4-243a24072e31",
+                        "LnDbEo3yDDcswKMC3h4H",
+                        AuthType.BASIC_AUTH)
+                .setUserInfo("android-XoaM8ODAYVcKnB16ob8N",
+                        "DOI0qOIa0KT6ViYmS1k6")
                 .setHeader(header)
-                 */
-
                 .build();
-
-
-
-
 
 
     }
