@@ -1,6 +1,6 @@
 package ir.vasl.restclient;
 
-import android.support.v4.util.ArrayMap;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         findViewById(R.id.text).setOnClickListener(view -> {
+
+            RequestParams params = new RequestParams();
+            params.put("","");
+
+
+            
+
             restClient.POST("http://test.vaslapp.com/taniyar/services/api/v1/user/home",
                     "",
                     new RequestParams(),
@@ -48,13 +55,23 @@ public class MainActivity extends AppCompatActivity {
             );
         });
 
-        ArrayMap<String,String> header = new ArrayMap<>();
-        header.put("appid","0e8f8fd2-1acb-11e7-8ab0-ac162d7938f0");
-        header.put("accept-language", "fa");
+
+
 
         restClient = new RestClient.Builder(this)
                 .setAcceptEnconding(EncodingType.GZIP)
+                /* ArrayMap<String,String> header = new ArrayMap<>();
+                header.put("appid","0e8f8fd2-1acb-11e7-8ab0-ac162d7938f0");
+                header.put("accept-language", "fa");
                 .setHeader(header)
+                 */
+
                 .build();
+
+
+
+
+
+
     }
 }

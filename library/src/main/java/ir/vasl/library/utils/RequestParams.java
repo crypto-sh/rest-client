@@ -59,6 +59,13 @@ public class RequestParams {
         params.put(key, value);
     }
 
+    public void put(String key, List values) {
+        if (paramsArray.get(key) != null){
+            values.addAll(paramsArray.get(key));
+        }
+        paramsArray.put(key,values);
+    }
+
     public void add(String key, List<String> values){
         if (paramsArray.get(key) != null){
             values.addAll(paramsArray.get(key));

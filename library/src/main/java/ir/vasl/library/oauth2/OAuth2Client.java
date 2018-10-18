@@ -16,10 +16,9 @@ import okhttp3.OkHttpClient;
 
 public class OAuth2Client implements AuthorizationParams {
 
-
+    private final AuthModel authModel;
     private final OkHttpClient okHttpClient;
     private final ArrayMap<String, String> headers;
-    private final AuthModel authModel;
 
     public OAuth2Client(OkHttpClient client, ArrayMap<String, String> headers, AuthModel auth) {
         this.okHttpClient = client;
