@@ -45,6 +45,7 @@ public class POST extends baseMethod {
                     request.addHeader("Accept-Encoding","gzip");
                     break;
             }
+
             if (responder instanceof ResponseTextHandler){
                 request.addHeader("Content-Type", "application/text");
                 request.addHeader("Accept", "application/text");
@@ -55,6 +56,7 @@ public class POST extends baseMethod {
                 request.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.addHeader("Accept", "application/octet-stream");
             }
+
             ArrayMap<String, String> headers = authModel.getHeaders();
             for (int index = 0;index < headers.size();index++){
                 String key   = headers.keyAt(index);
@@ -92,6 +94,12 @@ public class POST extends baseMethod {
             OAuth2Client auth = new OAuth2Client(client,headers,authModel);
             auth.requestAccessToken(response -> {
                 if (response.isSuccessful()) {
+                    switch (authModel.getAuthType()){
+                        case BASIC_AUTH:
+                            headers.put("Authorization", String.format("Bearer %s", response.getAccessToken()));
+                            break;
+                    }
+                    authModel.setHeaders(headers);
                     no_Auth(client,url,tag,authModel,params,responder);
                 } else {
                     new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.AuthorizationException));

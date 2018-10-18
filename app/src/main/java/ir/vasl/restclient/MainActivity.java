@@ -30,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
             params.put("","");
 
 
-            
-
             restClient.POST("http://test.vaslapp.com/taniyar/services/api/v1/user/home",
                     "",
                     new RequestParams(),
