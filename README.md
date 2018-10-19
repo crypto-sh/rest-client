@@ -16,7 +16,7 @@ Gradle
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:restclient:1.0.1'
+        implementation 'com.github.alishatergholi:restclient:1.0.2'
     }
 ```
 How do i use RestClient
