@@ -1,6 +1,8 @@
 package ir.vasl.restclient;
 
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
             RequestParams params = new RequestParams();
             params.put("", "");
-
-
             restClient.POST("http://sandbox.vaslapp.com/api/v1/subscriber/loginbyusername",
                     "",
                     new RequestParams(),
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                     }
             );
         });
+
 
 
 //        .Builder(getApplicationContext(),"")

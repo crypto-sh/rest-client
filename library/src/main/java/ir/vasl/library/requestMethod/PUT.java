@@ -56,10 +56,16 @@ public class PUT extends baseMethod {
             }
             ArrayMap<String, String> headers = authModel.getHeaders();
             for (int index = 0;index < headers.size();index++){
-                String key   = headers.keyAt(index);
-                String value = headers.get(key);
-                if (!general.StringIsEmptyOrNull(key) && !general.StringIsEmptyOrNull(value)){
-                    request.addHeader(key,value);
+                try {
+                    String key   = headers.keyAt(index);
+                    String value = headers.get(key);
+                    if (value != null) {
+                        if (!general.StringIsEmptyOrNull(key) && !general.StringIsEmptyOrNull(value)) {
+                            request.addHeader(key, value);
+                        }
+                    }
+                } catch (Exception e) {
+                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));
                 }
             }
             client.newCall(request.build()).enqueue(new Callback() {

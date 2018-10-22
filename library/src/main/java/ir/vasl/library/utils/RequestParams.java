@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import ir.vasl.library.helper.general;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
 
@@ -32,34 +33,58 @@ public class RequestParams {
     }
 
     public void put(String key, String value) {
+        if (general.StringIsEmptyOrNull(key) || general.StringIsEmptyOrNull(value)){
+            return;
+        }
         params.put(key, value);
     }
 
     public void put(String key, Integer value) {
+        if (general.StringIsEmptyOrNull(key) ||  value == null){
+            return;
+        }
         params.put(key, value);
     }
 
     public void put(String key, Float value) {
+        if (general.StringIsEmptyOrNull(key) ||  value == null){
+            return;
+        }
         params.put(key, value);
     }
 
     public void put(String key, Double value) {
+        if (general.StringIsEmptyOrNull(key) ||  value == null){
+            return;
+        }
         params.put(key, value);
     }
 
     public void put(String key, File value){
+        if (general.StringIsEmptyOrNull(key) ||  value == null){
+            return;
+        }
         fileParams.put(key,value);
     }
 
     public void put(String key, boolean value) {
+        if (general.StringIsEmptyOrNull(key)){
+            return;
+        }
         params.put(key, value);
     }
 
     public void put(String key, JSONObject value) {
+        if (general.StringIsEmptyOrNull(key) ||  value == null){
+            return;
+        }
         params.put(key, value);
     }
 
     public void put(String key, List values) {
+        if (general.StringIsEmptyOrNull(key) ||  values == null){
+            return;
+        }
         if (paramsArray.get(key) != null){
             values.addAll(paramsArray.get(key));
         }
@@ -67,6 +92,9 @@ public class RequestParams {
     }
 
     public void add(String key, List<String> values){
+        if (general.StringIsEmptyOrNull(key) ||  values == null){
+            return;
+        }
         if (paramsArray.get(key) != null){
             values.addAll(paramsArray.get(key));
         }
@@ -74,6 +102,9 @@ public class RequestParams {
     }
 
     public void putContent(String key, List<Object> values){
+        if (general.StringIsEmptyOrNull(key) ||  values == null){
+            return;
+        }
         ArrayList<String> items = new ArrayList<>();
         if (paramsArray.get(key) != null){
             items.addAll(paramsArray.get(key));
@@ -85,6 +116,9 @@ public class RequestParams {
     }
 
     public void add(String key, String value) {
+        if (general.StringIsEmptyOrNull(key) ||  value == null){
+            return;
+        }
         ArrayList<String> values;
         if (paramsArray.get(key) != null) {
             values = (ArrayList<String>) paramsArray.get(key);
@@ -118,6 +152,9 @@ public class RequestParams {
     }
 
     public void setParamsArray(LinkedHashMap<String, List<String>> paramsArray) {
+        if (paramsArray == null){
+            return;
+        }
         this.paramsArray = paramsArray;
     }
 }

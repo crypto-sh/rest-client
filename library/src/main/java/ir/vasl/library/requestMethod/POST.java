@@ -40,33 +40,33 @@ public class POST extends baseMethod {
                     .addHeader("cache-control"  , "no-cache")
                     .addHeader("os"             , "android")
                     .post(params.getRequestForm());
-
             switch (authModel.getEncodingType()){
                 case GZIP:
                     request.addHeader("Accept-Encoding","gzip");
                     break;
             }
-
             if (responder instanceof ResponseTextHandler){
                 request.addHeader("Content-Type", "application/text");
                 request.addHeader("Accept", "application/text");
-                Log.d("MainActivity","TEXT");
             }else if (responder instanceof ResponseJsonHandler){
                 request.addHeader("Content-Type", "application/json");
                 request.addHeader("Accept", "application/json");
-                Log.d("MainActivity","JSON");
             }else {
                 request.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.addHeader("Accept", "application/octet-stream");
-                Log.d("MainActivity","Protocol Buffer");
             }
-
             ArrayMap<String, String> headers = authModel.getHeaders();
             for (int index = 0;index < headers.size();index++){
-                String key   = headers.keyAt(index);
-                String value = headers.get(key);
-                if (!general.StringIsEmptyOrNull(key) && !general.StringIsEmptyOrNull(value)){
-                    request.addHeader(key,value);
+                try {
+                    String key   = headers.keyAt(index);
+                    String value = headers.get(key);
+                    if (value != null) {
+                        if (!general.StringIsEmptyOrNull(key) && !general.StringIsEmptyOrNull(value)) {
+                            request.addHeader(key, value);
+                        }
+                    }
+                } catch (Exception e) {
+                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));
                 }
             }
             client.newCall(request.build()).enqueue(new Callback() {
