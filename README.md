@@ -20,7 +20,7 @@ Gradle
         implementation 'com.github.alishatergholi:restclient:1.0.2'
     }
 ```
-/releases/latest
+[/releases/latest]
 
 How do i use RestClient
 =======================
