@@ -9,6 +9,7 @@ implement Basic Authorization
 
 download
 ======
+[![npm version](https://badge.fury.io/js/survey-monkey-streams.svg)](//npmjs.com/package/survey-monkey-streams)
 
 Gradle
 ```groovy
@@ -20,7 +21,6 @@ Gradle
         implementation 'com.github.alishatergholi:restclient:1.0.2'
     }
 ```
-[/releases/latest]
 
 How do i use RestClient
 =======================
