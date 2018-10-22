@@ -7,7 +7,7 @@ Type-safe HTTP client for Android and Java by Square, Inc.
 implement Basic Authorization 
 
 
-[![GitHub version](https://img.shields.io/github/tag/robotology/yarp.svg?label=Latest Release&skip=start;foo;bar)](https://github.com/alishatergholi/restclient/releases/latest)
+[![GitHub version](https://img.shields.io/github/tag/robotology/yarp.svg?label=Latest Release)(https://github.com/alishatergholi/restclient/releases/latest)
 
 
 download
