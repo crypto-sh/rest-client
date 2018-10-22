@@ -22,19 +22,39 @@ public abstract class ResponseJsonHandler extends ResultHandler {
     @Override
     protected void onSuccess(String url,long startTime, byte[] result) {
         try {
-            String data = new String(result,"UTF-8");
+            final String data = new String(result,"UTF-8");
             logHelper.d("url : " + url + " - time : " + calcTime(startTime) + " size : " + calcFileSize(result));
             try {
-                Object object = new JSONTokener(data).nextValue();
+                final Object object = new JSONTokener(data).nextValue();
                 if (object instanceof JSONObject){
-                    new Handler(Looper.getMainLooper()).post(() -> this.onSuccess((JSONObject) object));
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onSuccess((JSONObject) object);
+                        }
+                    });
                 }else if (object instanceof JSONArray){
-                    new Handler(Looper.getMainLooper()).post(() -> this.onSuccess((JSONArray) object));
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onSuccess((JSONArray) object);
+                        }
+                    });
                 }else {
-                    new Handler(Looper.getMainLooper()).post(() -> this.onSuccess(data));
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            onSuccess(data);
+                        }
+                    });
                 }
             } catch (JSONException e) {
-                new Handler(Looper.getMainLooper()).post(() -> this.onSuccess(data));
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        onSuccess(data);
+                    }
+                });
             }
         } catch (UnsupportedEncodingException e) {
             this.onFailure(url,startTime,ErrorCode.UnsupportedEncodingException);
@@ -42,15 +62,25 @@ public abstract class ResponseJsonHandler extends ResultHandler {
     }
 
     @Override
-    public void onProgress(double percent, long bytesWritten, long totalSize) {
+    public void onProgress(final double percent, final long bytesWritten, final long totalSize) {
         super.onProgress(percent, bytesWritten, totalSize);
-        new Handler(Looper.getMainLooper()).post(() -> onProgress(percent,bytesWritten,totalSize));
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                onProgress(percent,bytesWritten,totalSize);
+            }
+        });
     }
 
     @Override
-    public void onFailure(String url,long startTime, ErrorCode errorCode) {
+    public void onFailure(String url, long startTime, final ErrorCode errorCode) {
         logHelper.d("url : " + url + " - time : " + calcTime(startTime));
-        new Handler(Looper.getMainLooper()).post(() -> onFailure(errorCode.getCode(),errorCode.getDescription()));
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                onFailure(errorCode.getCode(),errorCode.getDescription());
+            }
+        });
     }
 
     protected abstract void onSuccess(JSONObject result);

@@ -54,7 +54,7 @@ public class OAuth2Client implements AuthorizationParams {
         return Access.getAccessToken(this);
     }
 
-    public void requestAccessToken(OAuthResponseCallback callback) {
+    public void requestAccessToken(final OAuthResponseCallback callback) {
         new Thread(){
             @Override
             public void run() {

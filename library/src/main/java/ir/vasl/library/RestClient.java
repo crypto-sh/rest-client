@@ -11,7 +11,9 @@ import android.support.v4.util.ArrayMap;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -70,7 +72,12 @@ public class RestClient {
             SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.sslSocketFactory(sslSocketFactory);
-            builder.hostnameVerifier((hostname, session) -> true);
+            builder.hostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String s, SSLSession sslSession) {
+                    return false;
+                }
+            });
             return builder.build();
         } catch (Exception e) {
             throw new RuntimeException(e);

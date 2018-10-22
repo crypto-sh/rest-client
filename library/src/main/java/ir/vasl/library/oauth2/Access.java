@@ -15,6 +15,7 @@ import okhttp3.FormBody;
 
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.Route;
 
 public class Access implements AuthorizationParams {
 
@@ -60,20 +61,27 @@ public class Access implements AuthorizationParams {
     }
 
     protected static Authenticator getAuthenticator(final OAuth2Client oAuth2Client, final AuthType type) {
-        return (route, response) -> {
-            String credential = "";
-//            authState.nextState();
-//            if (authState.isBasicAuth()) {
-//                credential = Credentials.basic(oAuth2Client.getUsername(), oAuth2Client.getPassword());
-//            } else if (authState.isAuthorizationAuth()) {
-//                credential = Credentials.basic(oAuth2Client.getClientId(), oAuth2Client.getClientSecret());
-//            } else if (authState.isFinalAuth()) {
-//                return null;
-//            }
-            credential = Credentials.basic(oAuth2Client.getClientId(), oAuth2Client.getClientSecret());
-            return response.request().newBuilder().header(HEADER_AUTHORIZATION, credential).build();
-        };
 
+        return new Authenticator() {
+
+            @Override
+            public Request authenticate(Route route, Response response) throws IOException {
+
+                String credential = Credentials.basic(oAuth2Client.getClientId(), oAuth2Client.getClientSecret());
+                return response.request().newBuilder().header(HEADER_AUTHORIZATION, credential).build();
+            }
+        };
+//        return (route, response) -> {
+//            String credential = "";
+////            authState.nextState();
+////            if (authState.isBasicAuth()) {
+////                credential = Credentials.basic(oAuth2Client.getUsername(), oAuth2Client.getPassword());
+////            } else if (authState.isAuthorizationAuth()) {
+////                credential = Credentials.basic(oAuth2Client.getClientId(), oAuth2Client.getClientSecret());
+////            } else if (authState.isFinalAuth()) {
+////                return null;
+////            }
+//        };
     }
 
 

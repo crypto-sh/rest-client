@@ -7,10 +7,12 @@ import android.support.v4.util.ArrayMap;
 
 import java.io.IOException;
 
+import ir.vasl.library.Interface.OAuthResponseCallback;
 import ir.vasl.library.Interface.ResultHandler;
 import ir.vasl.library.enums.ErrorCode;
 import ir.vasl.library.helper.general;
 import ir.vasl.library.model.AuthModel;
+import ir.vasl.library.model.OAuthResponse;
 import ir.vasl.library.oauth2.OAuth2Client;
 import ir.vasl.library.response.ResponseJsonHandler;
 import ir.vasl.library.response.ResponseTextHandler;
@@ -24,10 +26,10 @@ public class GET extends baseMethod {
 
     public synchronized static void no_Auth(
             @NonNull OkHttpClient client,
-            @NonNull String url,
+            @NonNull final String url,
             @NonNull String tag,
             @NonNull AuthModel authModel,
-            @NonNull ResultHandler responder) {
+            @NonNull final ResultHandler responder) {
         final Long startTime = getTimeMillisecond();
         try {
             final Request.Builder request = new Request.Builder()
@@ -63,13 +65,23 @@ public class GET extends baseMethod {
                         }
                     }
                 } catch (Exception e) {
-                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            responder.onFailure(url,startTime,ErrorCode.RuntimeException);
+                        }
+                    });
                 }
             }
             client.newCall(request.build()).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, final IOException e) {
-                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.ServerConnectionError));
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            responder.onFailure(url,startTime,ErrorCode.ServerConnectionError);
+                        }
+                    });
                 }
 
                 @Override
@@ -78,35 +90,53 @@ public class GET extends baseMethod {
                 }
             });
         } catch (Exception ex) {
-            new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    responder.onFailure(url,startTime,ErrorCode.RuntimeException);
+                }
+            });
         }
     }
 
     public synchronized static void basic_Auth(
-            @NonNull OkHttpClient client,
-            @NonNull String url,
-            @NonNull String tag,
-            @NonNull AuthModel authModel,
-            @NonNull ResultHandler responder) {
+            @NonNull final OkHttpClient client,
+            @NonNull final String url,
+            @NonNull final String tag,
+            @NonNull final AuthModel authModel,
+            @NonNull final ResultHandler responder) {
         final Long startTime = getTimeMillisecond();
         try {
-            ArrayMap<String, String> headers = authModel.getHeaders();
+            final ArrayMap<String, String> headers = authModel.getHeaders();
             OAuth2Client auth = new OAuth2Client(client,headers,authModel);
-            auth.requestAccessToken(response -> {
-                if (response.isSuccessful()) {
-                    switch (authModel.getAuthType()){
-                        case BASIC_AUTH:
-                            headers.put("Authorization", String.format("Bearer %s", response.getAccessToken()));
-                            break;
+            auth.requestAccessToken(new OAuthResponseCallback() {
+                @Override
+                public void onResponse(OAuthResponse response) {
+                    if (response.isSuccessful()) {
+                        switch (authModel.getAuthType()){
+                            case BASIC_AUTH:
+                                headers.put("Authorization", String.format("Bearer %s", response.getAccessToken()));
+                                break;
+                        }
+                        authModel.setHeaders(headers);
+                        no_Auth(client,url,tag,authModel,responder);
+                    } else {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                responder.onFailure(url,startTime,ErrorCode.AuthorizationException);
+                            }
+                        });
                     }
-                    authModel.setHeaders(headers);
-                    no_Auth(client,url,tag,authModel,responder);
-                } else {
-                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.AuthorizationException));
                 }
             });
         } catch (Exception ex) {
-            new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    responder.onFailure(url,startTime,ErrorCode.RuntimeException);
+                }
+            });
         }
     }
 

@@ -9,9 +9,11 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import ir.vasl.library.Interface.OAuthResponseCallback;
 import ir.vasl.library.enums.ErrorCode;
 import ir.vasl.library.helper.general;
 import ir.vasl.library.model.AuthModel;
+import ir.vasl.library.model.OAuthResponse;
 import ir.vasl.library.oauth2.OAuth2Client;
 import ir.vasl.library.response.ResponseJsonHandler;
 import ir.vasl.library.response.ResponseTextHandler;
@@ -27,38 +29,38 @@ public class POST extends baseMethod {
 
     public synchronized static void no_Auth(
             @NonNull OkHttpClient client,
-            @NonNull String url,
+            @NonNull final String url,
             @NonNull String tag,
             @NonNull AuthModel authModel,
             @NonNull RequestParams params,
-            @NonNull ResultHandler responder) {
+            @NonNull final ResultHandler responder) {
         final Long startTime = getTimeMillisecond();
         try {
             Request.Builder request = new Request.Builder()
                     .url(url)
                     .tag(tag)
-                    .addHeader("cache-control"  , "no-cache")
-                    .addHeader("os"             , "android")
+                    .addHeader("cache-control", "no-cache")
+                    .addHeader("os", "android")
                     .post(params.getRequestForm());
-            switch (authModel.getEncodingType()){
+            switch (authModel.getEncodingType()) {
                 case GZIP:
-                    request.addHeader("Accept-Encoding","gzip");
+                    request.addHeader("Accept-Encoding", "gzip");
                     break;
             }
-            if (responder instanceof ResponseTextHandler){
+            if (responder instanceof ResponseTextHandler) {
                 request.addHeader("Content-Type", "application/text");
                 request.addHeader("Accept", "application/text");
-            }else if (responder instanceof ResponseJsonHandler){
+            } else if (responder instanceof ResponseJsonHandler) {
                 request.addHeader("Content-Type", "application/json");
                 request.addHeader("Accept", "application/json");
-            }else {
+            } else {
                 request.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.addHeader("Accept", "application/octet-stream");
             }
             ArrayMap<String, String> headers = authModel.getHeaders();
-            for (int index = 0;index < headers.size();index++){
+            for (int index = 0; index < headers.size(); index++) {
                 try {
-                    String key   = headers.keyAt(index);
+                    String key = headers.keyAt(index);
                     String value = headers.get(key);
                     if (value != null) {
                         if (!general.StringIsEmptyOrNull(key) && !general.StringIsEmptyOrNull(value)) {
@@ -66,54 +68,82 @@ public class POST extends baseMethod {
                         }
                     }
                 } catch (Exception e) {
-                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            responder.onFailure(url, startTime, ErrorCode.RuntimeException);
+                        }
+                    });
                 }
             }
             client.newCall(request.build()).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, final IOException e) {
-                    new Handler(Looper.getMainLooper()).post(() ->
-                            responder.onFailure(url,startTime,ErrorCode.ServerConnectionError)
-                    );
+                    new Handler(Looper.getMainLooper())
+                            .post(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          responder.onFailure(url, startTime, ErrorCode.ServerConnectionError);
+                                      }
+                                  }
+
+                            );
                 }
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull final Response response) {
-                    responder.onResultHandler(startTime,response);
+                    responder.onResultHandler(startTime, response);
                 }
             });
         } catch (Exception ex) {
-            new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    responder.onFailure(url, startTime, ErrorCode.RuntimeException);
+                }
+            });
         }
     }
 
     public synchronized static void basic_Auth(
-            @NonNull OkHttpClient client,
-            @NonNull String url,
-            @NonNull String tag,
-            @NonNull AuthModel authModel,
-            @NonNull RequestParams params,
-            @NonNull ResultHandler responder) {
+            @NonNull final OkHttpClient client,
+            @NonNull final String url,
+            @NonNull final String tag,
+            @NonNull final AuthModel authModel,
+            @NonNull final RequestParams params,
+            @NonNull final ResultHandler responder) {
         final Long startTime = getTimeMillisecond();
         try {
-            ArrayMap<String, String> headers = authModel.getHeaders();
-            OAuth2Client auth = new OAuth2Client(client,headers,authModel);
-            auth.requestAccessToken(response -> {
-                if (response.isSuccessful()) {
-                    switch (authModel.getAuthType()){
-                        case BASIC_AUTH:
-                            headers.put("Authorization", String.format("Bearer %s", response.getAccessToken()));
-                            break;
+            final ArrayMap<String, String> headers = authModel.getHeaders();
+            OAuth2Client auth = new OAuth2Client(client, headers, authModel);
+            auth.requestAccessToken(new OAuthResponseCallback() {
+                @Override
+                public void onResponse(OAuthResponse response) {
+                    if (response.isSuccessful()) {
+                        switch (authModel.getAuthType()) {
+                            case BASIC_AUTH:
+                                headers.put("Authorization", String.format("Bearer %s", response.getAccessToken()));
+                                break;
+                        }
+                        authModel.setHeaders(headers);
+                        no_Auth(client, url, tag, authModel, params, responder);
+                    } else {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                responder.onFailure(url, startTime, ErrorCode.AuthorizationException);
+                            }
+                        });
                     }
-                    authModel.setHeaders(headers);
-                    no_Auth(client,url,tag,authModel,params,responder);
-                } else {
-                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.AuthorizationException));
                 }
-
             });
         } catch (Exception ex) {
-            new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,startTime,ErrorCode.RuntimeException));
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    responder.onFailure(url, startTime, ErrorCode.RuntimeException);
+                }
+            });
         }
     }
 

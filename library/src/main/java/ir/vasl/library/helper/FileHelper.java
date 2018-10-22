@@ -1,14 +1,11 @@
 package ir.vasl.library.helper;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
@@ -18,7 +15,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class FileHelper {
@@ -138,61 +134,6 @@ public class FileHelper {
         }
         return "";
     }
-
-    public void parseDir(File dir, ArrayList<File> files) {
-        try {
-            final File[] sortedByDate = dir.listFiles();
-            if (sortedByDate != null && sortedByDate.length > 1) {
-                Arrays.sort(sortedByDate, (object1, object2) -> Long.compare((object2).lastModified(), (object1).lastModified()));
-            }
-            if (sortedByDate != null) {
-                for (File file : sortedByDate) {
-                    if (file.isDirectory()) {
-                        if (!file.getName().toLowerCase().startsWith(".")) {
-                            parseDir(file, files);
-                        }
-                    } else {
-                        String EXTENSION_JPG = ".jpg";
-                        String EXTENSION_JPEG = ".jpeg";
-                        String EXTENSION_PNG = ".png";
-                        if (file.getName().toLowerCase().endsWith(EXTENSION_JPG) || file.getName().toLowerCase().endsWith(EXTENSION_JPEG) || file.getName().toLowerCase().endsWith(EXTENSION_PNG)) {
-                            files.add(file);
-                        }
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            logHelper.e(ex);
-        }
-    }
-
-    public ArrayList<File> parseImageFromDirectory(File dir) {
-        ArrayList<File> arrayList = new ArrayList<>();
-        parseDir(dir, arrayList);
-        return arrayList;
-    }
-
-//    public void pickImage(Activity activity, int updateMode) {
-//        try {
-//            if (new PermissionHelper(activity).checkAccessStoragePermission()) {
-//                Intent intent;
-//                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-//                    intent = new Intent();
-//                    intent.setType("image/*");
-//                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-//                    activity.startActivityForResult(intent, updateMode);
-//                } else {
-//                    intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                    intent.setAction(Intent.ACTION_GET_CONTENT);
-//                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-//                    activity.startActivityForResult(intent, updateMode);
-//                }
-//            }
-//        } catch (Exception e) {
-//            logHelper.e("pickImage", e.getMessage());
-//        }
-//    }
 
     private String fileSize(File file) {
         return readableFileSize(file.length());

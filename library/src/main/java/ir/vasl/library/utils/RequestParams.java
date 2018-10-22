@@ -19,14 +19,11 @@ import okhttp3.RequestBody;
  */
 public class RequestParams {
 
-    LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+    private LinkedHashMap<String, Object> params = new LinkedHashMap<>();
 
-    LinkedHashMap<String, List<String>> paramsArray = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<Object>> paramsArray = new LinkedHashMap<>();
 
-    LinkedHashMap<String,File> fileParams = new LinkedHashMap<>();
-
-    private String key;
-    private List<String> values;
+    private LinkedHashMap<String,File> fileParams = new LinkedHashMap<>();
 
     public RequestParams() {
 
@@ -81,17 +78,18 @@ public class RequestParams {
         params.put(key, value);
     }
 
-    public void put(String key, List values) {
+    public void put(String key, List<Object> values) {
         if (general.StringIsEmptyOrNull(key) ||  values == null){
             return;
         }
-        if (paramsArray.get(key) != null){
-            values.addAll(paramsArray.get(key));
+        if (paramsArray.get(key) != null) {
+            List<Object> items = paramsArray.get(key);
+            values.addAll(items);
         }
-        paramsArray.put(key,values);
+        paramsArray.put(key, values);
     }
 
-    public void add(String key, List<String> values){
+    public void add(String key, List<Object> values){
         if (general.StringIsEmptyOrNull(key) ||  values == null){
             return;
         }
@@ -105,7 +103,7 @@ public class RequestParams {
         if (general.StringIsEmptyOrNull(key) ||  values == null){
             return;
         }
-        ArrayList<String> items = new ArrayList<>();
+        ArrayList<Object> items = new ArrayList<>();
         if (paramsArray.get(key) != null){
             items.addAll(paramsArray.get(key));
         }
@@ -119,9 +117,9 @@ public class RequestParams {
         if (general.StringIsEmptyOrNull(key) ||  value == null){
             return;
         }
-        ArrayList<String> values;
+        ArrayList<Object> values;
         if (paramsArray.get(key) != null) {
-            values = (ArrayList<String>) paramsArray.get(key);
+            values = (ArrayList<Object>) paramsArray.get(key);
             values.add(value);
         } else {
             values = new ArrayList<>();
@@ -151,7 +149,7 @@ public class RequestParams {
         return fileParams;
     }
 
-    public void setParamsArray(LinkedHashMap<String, List<String>> paramsArray) {
+    public void setParamsArray(LinkedHashMap<String, List<Object>> paramsArray) {
         if (paramsArray == null){
             return;
         }
