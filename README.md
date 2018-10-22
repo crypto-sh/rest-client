@@ -6,9 +6,6 @@ Type-safe HTTP client for Android and Java by Square, Inc.
 
 implement Basic Authorization 
 
-[![GitHub version](https://badge.fury.io/gh/boennemann%2Fbadges.svg?label=latest Release)](https://github.com/alishatergholi/restclient/releases/latest)
-
-
 download
 ======
 
@@ -20,7 +17,7 @@ Gradle
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:restclient:1.0.2'
+        implementation 'com.github.alishatergholi:restclient:1.0.3'
     }
 ```
 
