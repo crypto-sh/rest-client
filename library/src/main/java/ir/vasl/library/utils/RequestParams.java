@@ -2,6 +2,7 @@ package ir.vasl.library.utils;
 
 
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -140,6 +141,24 @@ public class RequestParams {
         }
         return body.build();
     }
+
+    public JSONObject getRequestFormJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            for (String key : params.keySet()) {
+                jsonObject.put(key, params.get(key));
+            }
+            for (String key : paramsArray.keySet()) {
+                for (Object item : paramsArray.get(key)) {
+                    jsonObject.put(key, item);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
 
     public LinkedHashMap<String, Object> getParams() {
         return params;

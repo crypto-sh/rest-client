@@ -21,8 +21,10 @@ import ir.vasl.library.utils.RequestParams;
 import ir.vasl.library.Interface.ResultHandler;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class POST extends baseMethod {
@@ -51,8 +53,11 @@ public class POST extends baseMethod {
                 request.addHeader("Content-Type", "application/text");
                 request.addHeader("Accept", "application/text");
             } else if (responder instanceof ResponseJsonHandler) {
-                request.addHeader("Content-Type", "application/json");
+                request.addHeader("Content-Type", "application/json; charset=utf-8");
                 request.addHeader("Accept", "application/json");
+                MediaType json = MediaType.parse("application/json; charset=utf-8");
+                RequestBody body = RequestBody.create(json, params.getRequestFormJson().toString());
+                request.post(body);
             } else {
                 request.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.addHeader("Accept", "application/octet-stream");
@@ -79,15 +84,7 @@ public class POST extends baseMethod {
             client.newCall(request.build()).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, final IOException e) {
-                    new Handler(Looper.getMainLooper())
-                            .post(new Runnable() {
-                                      @Override
-                                      public void run() {
-                                          responder.onFailure(url, startTime, ErrorCode.ServerConnectionError);
-                                      }
-                                  }
-
-                            );
+                    responder.onFailure(url, startTime, ErrorCode.ServerConnectionError);
                 }
 
                 @Override
@@ -96,12 +93,7 @@ public class POST extends baseMethod {
                 }
             });
         } catch (Exception ex) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    responder.onFailure(url, startTime, ErrorCode.RuntimeException);
-                }
-            });
+            responder.onFailure(url, startTime, ErrorCode.RuntimeException);
         }
     }
 

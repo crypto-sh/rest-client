@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.text).setOnClickListener(view -> {
 
             RequestParams params = new RequestParams();
-            params.put("", "");
-            restClient.POST("http://sandbox.vaslapp.com/api/v1/subscriber/loginbyusername",
+            params.put("page", "1");
+            restClient.POST("http://sandbox.vaslapp.com/api/v1/content/category/list",
                     "",
                     new RequestParams(),
                     new ResponseJsonHandler() {
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
 //        .Builder(getApplicationContext(),"")
 //                .setClientId("")
 //                .setClientSecret("")
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         header.put("accept-language", "fa");
 
         restClient = new RestClient.Builder(this)
-//                .setAcceptEnconding(EncodingType.GZIP)
                 .setAuthorization("http://sandbox.vaslapp.com/oauth/token",
                         "c3bdf6c5-508f-48ae-9af4-243a24072e31",
                         "LnDbEo3yDDcswKMC3h4H",
