@@ -17,7 +17,7 @@ Gradle
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:restclient:v1.0.3'
+        implementation 'com.github.alishatergholi:restclient:v1.0.4'
     }
 ```
 
@@ -43,7 +43,7 @@ How do i use RestClient
             .build();
     
     //for add body use.
-    RequestParams params = new RequestParams();
+    RequestParams params = new RequestParams(RequestBodyType.FormData);
     params.put("key","value");
     
     client.POST("url",
