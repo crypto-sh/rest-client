@@ -16,6 +16,7 @@ import ir.vasl.library.RestClient;
 import ir.vasl.library.enums.AuthType;
 import ir.vasl.library.enums.EncodingType;
 
+import ir.vasl.library.enums.RequestBodyType;
 import ir.vasl.library.response.ResponseJsonHandler;
 import ir.vasl.library.response.ResponseTextHandler;
 import ir.vasl.library.utils.RequestParams;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.text).setOnClickListener(view -> {
 
-            RequestParams params = new RequestParams();
+            RequestParams params = new RequestParams(RequestBodyType.FormData);
             params.put("page", "1");
             restClient.POST("http://sandbox.vaslapp.com/api/v1/content/category/list",
                     "",
