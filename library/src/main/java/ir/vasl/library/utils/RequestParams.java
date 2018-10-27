@@ -1,7 +1,6 @@
 package ir.vasl.library.utils;
 
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,8 +9,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import ir.vasl.library.enums.RequestBodyType;
+import ir.vasl.library.helper.LogHelper;
 import ir.vasl.library.helper.general;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 
@@ -20,14 +22,37 @@ import okhttp3.RequestBody;
  */
 public class RequestParams {
 
-    private LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+    private String plainText;
 
-    private LinkedHashMap<String, List<Object>> paramsArray = new LinkedHashMap<>();
+    private String contentType;
+
+    private byte[] binaryInput;
+
+    private LinkedHashMap<String, Object> params = new LinkedHashMap<>();
 
     private LinkedHashMap<String,File> fileParams = new LinkedHashMap<>();
 
+    private LinkedHashMap<String, List<Object>> paramsArray = new LinkedHashMap<>();
+
+    private RequestBodyType type = RequestBodyType.FormData;
+
+    LogHelper logHelper = new LogHelper(RequestBody.class);
+
     public RequestParams() {
 
+    }
+
+    public RequestParams(RequestBodyType type) {
+        this.type = type;
+    }
+
+    public void put(String plainText){
+        this.plainText = plainText;
+    }
+
+    public void put(String contentType,byte[] binaryInput){
+        this.contentType = contentType;
+        this.binaryInput = binaryInput;
     }
 
     public void put(String key, String value) {
@@ -130,35 +155,40 @@ public class RequestParams {
     }
 
     public RequestBody getRequestForm() {
-        FormBody.Builder body = new FormBody.Builder();
-        for (String key : params.keySet()) {
-            body.addEncoded(key, String.valueOf(params.get(key)));
-        }
-        for (String key : paramsArray.keySet()) {
-            for (Object item : paramsArray.get(key)) {
-                body.addEncoded(key, String.valueOf(item));
-            }
-        }
-        return body.build();
-    }
-
-    public JSONObject getRequestFormJson() {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            for (String key : params.keySet()) {
-                jsonObject.put(key, params.get(key));
-            }
-            for (String key : paramsArray.keySet()) {
-                for (Object item : paramsArray.get(key)) {
-                    jsonObject.put(key, item);
+        switch (type){
+            case RawTEXTPlain:
+                return RequestBody.create(MediaType.parse("text/plain; charset=utf-8"), plainText);
+            case RawJSON:
+                JSONObject object = new JSONObject();
+                try {
+                    for (String key : params.keySet()) {
+                        object.put(key, String.valueOf(params.get(key)));
+                    }
+                    for (String key : paramsArray.keySet()) {
+                        for (Object item : paramsArray.get(key)) {
+                            object.put(key, String.valueOf(item));
+                        }
+                    }
+                } catch (JSONException e) {
+                    //throw new JSONException("Exception During Create JSON");
+                    logHelper.e(e);
                 }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+                return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
+            case Binary:
+                return RequestBody.create(MediaType.parse(contentType),(byte[]) binaryInput);
+            default: //FormData
+                FormBody.Builder formBody = new FormBody.Builder();
+                for (String key : params.keySet()) {
+                    formBody.addEncoded(key, String.valueOf(params.get(key)));
+                }
+                for (String key : paramsArray.keySet()) {
+                    for (Object item : paramsArray.get(key)) {
+                        formBody.addEncoded(key, String.valueOf(item));
+                    }
+                }
+                return formBody.build();
         }
-        return jsonObject;
     }
-
 
     public LinkedHashMap<String, Object> getParams() {
         return params;

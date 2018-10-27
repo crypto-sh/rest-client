@@ -4,8 +4,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
-import android.util.Log;
-
 
 import java.io.IOException;
 
@@ -21,10 +19,8 @@ import ir.vasl.library.utils.RequestParams;
 import ir.vasl.library.Interface.ResultHandler;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class POST extends baseMethod {
@@ -55,9 +51,6 @@ public class POST extends baseMethod {
             } else if (responder instanceof ResponseJsonHandler) {
                 request.addHeader("Content-Type", "application/json; charset=utf-8");
                 request.addHeader("Accept", "application/json");
-                MediaType json = MediaType.parse("application/json; charset=utf-8");
-                RequestBody body = RequestBody.create(json, params.getRequestFormJson().toString());
-                request.post(body);
             } else {
                 request.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.addHeader("Accept", "application/octet-stream");

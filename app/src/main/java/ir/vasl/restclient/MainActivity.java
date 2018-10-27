@@ -64,12 +64,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-//        .Builder(getApplicationContext(),"")
-//                .setClientId("")
-//                .setClientSecret("")
-//                .setUserName("")
-//                .setPassword("")
-//                .setSite("")
         ArrayMap<String, String> header = new ArrayMap<>();
         header.put("appid", "c3bdf6c5-508f-48ae-9af4-243a24072e31");
         header.put("accept-language", "fa");
