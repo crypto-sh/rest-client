@@ -17,7 +17,7 @@ Gradle
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:restclient:v1.0.5'
+        implementation 'com.github.alishatergholi:restclient:v1.0.6'
     }
 ```
 
