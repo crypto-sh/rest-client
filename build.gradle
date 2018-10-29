@@ -26,8 +26,8 @@ allprojects {
         targetSdkVersion = 28
         compileSdkVersion  = 28
         buildToolsVersion  = '28.0.3'
-        versionCode = 5
-        versionName = "1.0.5"
+        versionCode = 6
+        versionName = "1.0.6"
     }
 }
 
