@@ -9,8 +9,19 @@ implement Basic Authorization
 download
 ======
 
-
 Gradle
+
+Old build
+```groovy
+    repositories{
+        maven { url 'https://jitpack.io' }
+    }
+    
+    dependencies {
+        implementation 'com.github.alishatergholi:restclient:v1.0.5'
+    }
+```
+Android x
 ```groovy
     repositories{
         maven { url 'https://jitpack.io' }
@@ -20,6 +31,7 @@ Gradle
         implementation 'com.github.alishatergholi:restclient:v1.0.6'
     }
 ```
+
 
 How do i use RestClient
 =======================
