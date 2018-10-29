@@ -4,20 +4,14 @@ package ir.vasl.library;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.util.ArrayMap;
 
 
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.collection.ArrayMap;
 import ir.vasl.library.Interface.ResultHandler;
 import ir.vasl.library.enums.AuthType;
 import ir.vasl.library.enums.EncodingType;
@@ -46,42 +40,6 @@ public class RestClient {
                     .build();
         }
         return instance;
-    }
-
-    private static OkHttpClient getUnsafeOkHttpClient() {
-        try {
-            // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new java.security.cert.X509Certificate[]{};
-                        }
-                    }
-            };
-            SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory);
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return false;
-                }
-            });
-            return builder.build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private Context appContext;
@@ -330,8 +288,11 @@ public class RestClient {
     public static void cancelCallWithTag(String tag) {
         for (Call call : getClient().dispatcher().queuedCalls()) {
             try {
-                if (call.request().tag().equals(tag))
-                    call.cancel();
+                Object item = call.request().tag();
+                if (item != null){
+                    if (item.equals(tag))
+                        call.cancel();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

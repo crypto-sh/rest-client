@@ -1,10 +1,11 @@
 package ir.vasl.library.oauth2;
 
 
-import android.support.v4.util.ArrayMap;
+
 
 import java.io.IOException;
 
+import androidx.collection.ArrayMap;
 import ir.vasl.library.Interface.AuthorizationParams;
 import ir.vasl.library.enums.AuthType;
 import ir.vasl.library.helper.general;

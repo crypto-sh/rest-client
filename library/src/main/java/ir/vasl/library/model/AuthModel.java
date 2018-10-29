@@ -1,9 +1,8 @@
 package ir.vasl.library.model;
 
 
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 
-import ir.vasl.library.RestClient;
 import ir.vasl.library.enums.AuthType;
 import ir.vasl.library.enums.EncodingType;
 

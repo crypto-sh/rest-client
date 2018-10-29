@@ -2,11 +2,12 @@ package ir.vasl.library.requestMethod;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.collection.ArrayMap;
 import ir.vasl.library.Interface.OAuthResponseCallback;
 import ir.vasl.library.Interface.ResultHandler;
 import ir.vasl.library.enums.ErrorCode;
@@ -28,7 +29,7 @@ public class PUT extends baseMethod {
     public synchronized static void no_Auth(
             @NonNull OkHttpClient client,
             @NonNull final String url,
-            @NonNull String tag,
+            @Nullable String tag,
             @NonNull AuthModel authModel,
             @NonNull RequestParams params,
             @NonNull final ResultHandler responder) {
@@ -104,7 +105,7 @@ public class PUT extends baseMethod {
     public synchronized static void basic_Auth(
             @NonNull final OkHttpClient client,
             @NonNull final String url,
-            @NonNull final String tag,
+            @Nullable final String tag,
             @NonNull final AuthModel authModel,
             @NonNull final RequestParams params,
             @NonNull final ResultHandler responder) {
