@@ -6,6 +6,8 @@ Type-safe HTTP client for Android and Java by Square, Inc.
 
 implement Basic Authorization 
 
+[![](https://jitpack.io/v/alishatergholi/RestClient.svg)](https://jitpack.io/#alishatergholi/RestClient)
+
 download
 ======
 
