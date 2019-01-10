@@ -8,6 +8,7 @@ public enum ErrorCode {
 
     AuthorizationException(401,"Authorization Exception"),
     SessionExpire(403,"Session Expire Exception"),
+    NotFound(404,"Not Found Exception"),
     InternetConnectionError(407,"Timeout Exception Internet connection Problem"),
     ServerConnectionError(500,"Server Connection Error"),
     NullPointerException(1005,"NUll Pointer Exception"),

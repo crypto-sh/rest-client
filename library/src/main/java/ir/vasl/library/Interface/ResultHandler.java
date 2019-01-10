@@ -62,7 +62,7 @@ public abstract class ResultHandler {
                 this.onFailure(url,startTime,ErrorCode.NullPointerException);
             }
         } else {
-            this.onFailure(url,startTime,ErrorCode.Exception);
+            this.onFailure(url,startTime,ErrorCode.Parse(response.code()));
         }
     }
 

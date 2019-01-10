@@ -30,7 +30,7 @@ public class RequestParams {
 
     private LinkedHashMap<String, Object> params = new LinkedHashMap<>();
 
-    private LinkedHashMap<String,File> fileParams = new LinkedHashMap<>();
+    private LinkedHashMap<String, File> fileParams = new LinkedHashMap<>();
 
     private LinkedHashMap<String, List<Object>> paramsArray = new LinkedHashMap<>();
 
@@ -162,11 +162,11 @@ public class RequestParams {
                 JSONObject object = new JSONObject();
                 try {
                     for (String key : params.keySet()) {
-                        object.put(key, String.valueOf(params.get(key)));
+                        object.put(key, params.get(key));
                     }
                     for (String key : paramsArray.keySet()) {
                         for (Object item : paramsArray.get(key)) {
-                            object.put(key, String.valueOf(item));
+                            object.put(key, item);
                         }
                     }
                 } catch (JSONException e) {
@@ -179,11 +179,12 @@ public class RequestParams {
             default: //FormData
                 FormBody.Builder formBody = new FormBody.Builder();
                 for (String key : params.keySet()) {
-                    formBody.addEncoded(key, String.valueOf(params.get(key)));
+
+                    formBody.addEncoded(key, params.get(key).toString());
                 }
                 for (String key : paramsArray.keySet()) {
                     for (Object item : paramsArray.get(key)) {
-                        formBody.addEncoded(key, String.valueOf(item));
+                        formBody.addEncoded(key, item.toString());
                     }
                 }
                 return formBody.build();

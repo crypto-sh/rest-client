@@ -33,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.text).setOnClickListener(view -> {
             RequestParams params = new RequestParams(RequestBodyType.FormData);
             params.put("page", "1");
+
+
+
+
+
             restClient.POST("test url", "", new RequestParams(), new ResponseJsonHandler() {
                         @Override
                         protected void onSuccess(JSONObject result) {
@@ -68,5 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 .setUserInfo("android-XoaM8ODAYVcKnB16ob8N", "DOI0qOIa0KT6ViYmS1k6")
                 .setHeader(header)
                 .build();
+
+
     }
 }
