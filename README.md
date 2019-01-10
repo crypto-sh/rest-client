@@ -30,7 +30,7 @@ Android x
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:restclient:v1.0.6'
+        implementation 'com.github.alishatergholi:restclient:v1.0.7'
     }
 ```
 
