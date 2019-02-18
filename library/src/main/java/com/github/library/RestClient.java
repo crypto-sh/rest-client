@@ -181,6 +181,39 @@ public class RestClient {
         }
     }
 
+    public void POST_FILE(
+            @NonNull final String url,
+            @Nullable final String tag,
+            @NonNull final RequestParams params,
+            @NonNull final ResultHandler responder){
+
+        if (checkNetworkConnection(this.appContext)) {
+            responder.onFailure(url,0,ErrorCode.InternetConnectionError);
+            return;
+        }
+        //region Authorization Model
+        AuthModel auth = new AuthModel();
+        auth.setClientId(this.clientId);
+        auth.setClientSecret(this.clientSecret);
+        auth.setSite(this.site);
+        auth.setScope(this.scope);
+        auth.setGrantType(this.grantType);
+        auth.setUsername(this.username);
+        auth.setPassword(this.password);
+        auth.setAuthType(this.authType);
+        auth.setEncodingType(this.encodingType);
+        auth.setHeaders(this.headers);
+        //endregion
+        switch (this.authType){
+            case NO_AUTH:
+                POST.file_no_Auth(getClient(), url, tag, auth, params, responder);
+                break;
+            case BASIC_AUTH:
+                POST.file_basic_Auth(getClient(),url,tag,auth,params,responder);
+                break;
+        }
+    }
+
     public void GET(
             @NonNull final String url,
             @Nullable final String tag,
