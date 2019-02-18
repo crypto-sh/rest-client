@@ -7,21 +7,18 @@ Type-safe HTTP client for Android and Java by Square, Inc.
 implement Basic Authorization 
 
 
-
 download
 ======
 
 Gradle
-
 latest version on jitpack [![](https://jitpack.io/v/alishatergholi/RestClient.svg)](https://jitpack.io/#alishatergholi/RestClient)
-
 ```groovy
     repositories{
         maven { url 'https://jitpack.io' }
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:restclient:latest_version'
+        implementation 'com.github.alishatergholi:rest-client:latest_version'
     }
 ```
 
@@ -30,22 +27,20 @@ How do i use RestClient
 =======================
 ```java
     RestClient client = new RestClient
-            .Builder(context)
-            
-            /* you can add Accept encoding for encode your response */
-            /* for now we just support gzip */
-            .setAcceptEnconding(EncodingType.GZIP) 
-            
-            /* for add custom header you need 
+             .Builder(context)
+             /* you can add Accept encoding for encode your response */
+             /* for now we just support gzip */
+             .setAcceptEnconding(EncodingType.GZIP) 
+             /* for add custom header you need 
              ArrayMap<String,String> header = new ArrayMap<>();
              header.put("appid","0e8f8fd2-1acb-11e7-8ab0-ac162d7938f0");
              header.put("accept-language", "fa");
-            .setHeader(header)
+             .setHeader(header)
              */
              /* for add Authorization Header */
              .setAuthorization("Authorization url","clientId","client",AuthType.BASIC_AUTH)
              .setUserInfo("username for Authorization","password for Authorization")
-            .build();
+             .build();
     
     //for add body use.
     RequestParams params = new RequestParams(RequestBodyType.FormData);

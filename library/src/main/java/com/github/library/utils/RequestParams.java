@@ -12,6 +12,8 @@ import java.util.List;
 import com.github.library.enums.RequestBodyType;
 import com.github.library.helper.LogHelper;
 import com.github.library.helper.general;
+import com.github.library.model.FileModel;
+
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -30,7 +32,7 @@ public class RequestParams {
 
     private LinkedHashMap<String, Object> params = new LinkedHashMap<>();
 
-    private LinkedHashMap<String, File> fileParams = new LinkedHashMap<>();
+    private LinkedHashMap<String, FileModel> fileParams = new LinkedHashMap<>();
 
     private LinkedHashMap<String, List<Object>> paramsArray = new LinkedHashMap<>();
 
@@ -83,7 +85,7 @@ public class RequestParams {
         params.put(key, value);
     }
 
-    public void put(String key, File value){
+    public void put(String key, FileModel value){
         if (general.StringIsEmptyOrNull(key) ||  value == null){
             return;
         }
@@ -195,7 +197,7 @@ public class RequestParams {
         return params;
     }
 
-    public LinkedHashMap<String, File> getFileParams() {
+    public LinkedHashMap<String, FileModel> getFileParams() {
         return fileParams;
     }
 
