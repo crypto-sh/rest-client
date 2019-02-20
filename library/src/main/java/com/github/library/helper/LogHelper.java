@@ -3,11 +3,13 @@ package com.github.library.helper;
 import android.util.Log;
 
 import com.github.library.BuildConfig;
+import com.github.library.RestClient;
 
 
 public class LogHelper {
 
-    private String LOG_TAG = "Restful";
+    private String LOG_TAG = "Rest-Client";
+
 
     private static final int MAX_LOG_TAG_LENGTH = 23;
 

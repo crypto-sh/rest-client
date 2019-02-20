@@ -15,41 +15,24 @@ import com.github.library.enums.ErrorCode;
 public abstract class ResponseTextHandler extends ResultHandler {
 
     @Override
-    protected void onSuccess(String url,long startTime, byte[] result) {
+    protected void onSuccess(String url, byte[] result) {
         try {
             final String value = new String(result,"UTF-8");
-            logHelper.d("url : " + url + " - time : " + calcTime(startTime) + " size : " + calcFileSize(result));
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    onSuccess(value);
-                }
-            });
+            new Handler(Looper.getMainLooper()).post(() -> onSuccess(value));
         } catch (UnsupportedEncodingException e) {
-            this.onFailure(url,startTime,ErrorCode.UnsupportedEncodingException);
+            this.onFailure(url,ErrorCode.UnsupportedEncodingException);
         }
     }
 
     @Override
     public void onProgress(final double percent, final long bytesWritten, final long totalSize) {
         super.onProgress(percent, bytesWritten, totalSize);
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                onProgress(percent,bytesWritten,totalSize);
-            }
-        });
+        new Handler(Looper.getMainLooper()).post(() -> onProgress(percent,bytesWritten,totalSize));
     }
 
     @Override
-    public void onFailure(String url, long startTime, final ErrorCode errorCode) {
-        logHelper.d("url : " + url + " - time : " + calcTime(startTime));
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                onFailure(errorCode.getCode(),errorCode.getDescription());
-            }
-        });
+    public void onFailure(String url, final ErrorCode errorCode) {
+        new Handler(Looper.getMainLooper()).post(() -> onFailure(errorCode.getCode(),errorCode.getDescription()));
     }
 
     protected abstract void onSuccess(String result);

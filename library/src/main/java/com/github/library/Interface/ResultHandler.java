@@ -3,15 +3,13 @@ package com.github.library.Interface;
 
 
 
+import com.github.library.enums.ErrorCode;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
-
-
-import com.github.library.enums.ErrorCode;
-import com.github.library.helper.LogHelper;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -22,11 +20,9 @@ import okhttp3.ResponseBody;
  */
 public abstract class ResultHandler {
 
-    protected LogHelper logHelper = new LogHelper(ResultHandler.class);
-
-    public void onResultHandler(long startTime,Response response){
+    public void onResultHandler(Response response){
         String url = response.request().url().url().toString();
-        if (response.body() != null && response.body().source() != null && response.isSuccessful()) {
+        if (response.body() != null && response.isSuccessful()) {
             InputStream inputStream = null;
             String contentEncodingHeader = response.header("Content-Encoding");
             ResponseBody body = response.body();
@@ -35,7 +31,7 @@ public abstract class ResultHandler {
                     try {
                         inputStream = new GZIPInputStream(body.byteStream());
                     } catch (IOException e) {
-                        this.onFailure(url,startTime,ErrorCode.IOException);
+                        this.onFailure(url,ErrorCode.IOException);
                     }
                 } else {
                     inputStream = body.byteStream();
@@ -51,28 +47,28 @@ public abstract class ResultHandler {
                         outputStream.flush();
                         byte[] result = outputStream.toByteArray();
                         outputStream.close();
-                        this.onSuccess(url,startTime,result);
+                        this.onSuccess(url,result);
                     } catch (IOException e) {
-                        this.onFailure(url,startTime,ErrorCode.IOException);
+                        this.onFailure(url,ErrorCode.IOException);
                     }
                 }else {
-                    this.onFailure(url,startTime,ErrorCode.ParseException);
+                    this.onFailure(url,ErrorCode.ParseException);
                 }
             } else {
-                this.onFailure(url,startTime,ErrorCode.NullPointerException);
+                this.onFailure(url,ErrorCode.NullPointerException);
             }
         } else {
-            this.onFailure(url,startTime,ErrorCode.Parse(response.code()));
+            this.onFailure(url,ErrorCode.Parse(response.code()));
         }
     }
 
-    protected abstract void onSuccess(String url,long startTime,byte[] result);
+    protected abstract void onSuccess(String url,byte[] result);
 
     public void onProgress(double percent,long bytesWritten,long totalSize){
 
     }
 
-    public abstract void onFailure(String url,long startTime,ErrorCode errorCode);
+    public abstract void onFailure(String url,ErrorCode errorCode);
 
     protected static String calcTime(Long startTime) {
         Long duration = getTimeMillisecond() - startTime;
