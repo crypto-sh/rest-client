@@ -1,23 +1,14 @@
 package com.github.library.requestMethod;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.net.Uri;
-import android.webkit.MimeTypeMap;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import com.github.library.RestClient;
+import com.github.library.helper.LogHelper;
 
 import java.util.concurrent.TimeUnit;
 
 
-import com.github.library.helper.LogHelper;
-
-
 public abstract class baseMethod {
 
+    LogHelper logHelper = new LogHelper(RestClient.class);
 
     protected static String calcTime(Long startTime) {
         Long duration = getTimeMillisecond() - startTime;

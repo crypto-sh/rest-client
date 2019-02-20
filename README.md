@@ -13,14 +13,23 @@ download
 Gradle
 latest version on jitpack [![](https://jitpack.io/v/alishatergholi/RestClient.svg)](https://jitpack.io/#alishatergholi/RestClient)
 ```groovy
+    
     repositories{
         maven { url 'https://jitpack.io' }
     }
     
+    //java version required
+    compileOptions {
+        sourceCompatibility  = JavaVersion.VERSION_1_8
+        targetCompatibility  = JavaVersion.VERSION_1_8
+    }
+    
     dependencies {
-        implementation 'com.github.alishatergholi:rest-client:latest_version'
+        implementation 'com.github.alishatergholi:rest-client:[latest_version](https://github.com/vaslco/vaslAppSdk/releases/latest)'
     }
 ```
+
+
 
 
 How do i use RestClient

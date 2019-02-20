@@ -1,33 +1,36 @@
+/**
+ * Created by alishatergholi on 2/20/18.
+ */
 package com.github.library;
-
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-
-import java.util.concurrent.TimeUnit;
-
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.collection.ArrayMap;
 import com.github.library.Interface.ResultHandler;
 import com.github.library.enums.AuthType;
 import com.github.library.enums.EncodingType;
 import com.github.library.enums.ErrorCode;
+import com.github.library.helper.LogHelper;
 import com.github.library.model.AuthModel;
 import com.github.library.requestMethod.DELETE;
 import com.github.library.requestMethod.GET;
 import com.github.library.requestMethod.POST;
 import com.github.library.requestMethod.PUT;
 import com.github.library.utils.RequestParams;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
 
-/**
- * Created by alishatergholi on 2/20/18.
- */
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import androidx.collection.ArrayMap;
+import okhttp3.Call;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class RestClient {
 
     private static OkHttpClient instance;
@@ -38,11 +41,18 @@ public class RestClient {
                     .newBuilder()
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .build();
+
+            if (debugEnable) {
+                instance.newBuilder()
+                        .addInterceptor(new LoggingInterceptor())
+                        .build();
+            }
         }
         return instance;
     }
 
     private Context appContext;
+
     private String clientId;
     private String clientSecret;
     private String site;
@@ -53,11 +63,13 @@ public class RestClient {
     private String username;
     private String password;
 
+    private static boolean debugEnable             = true;
+
     private AuthType authType;
     private EncodingType encodingType;
     private ArrayMap<String,String> headers;
 
-    RestClient(Builder builder){
+    public RestClient(Builder builder){
         this.appContext     = builder.appContext;
         this.clientId       = builder.clientId;
         this.clientSecret   = builder.clientSecret;
@@ -66,6 +78,7 @@ public class RestClient {
         this.grantType      = builder.grantType;
         this.username       = builder.username;
         this.password       = builder.password;
+        this.debugEnable    = builder.debugEnable;
         this.authType       = builder.authType;
         this.encodingType   = builder.encodingType;
         this.headers        = builder.headers;
@@ -84,6 +97,8 @@ public class RestClient {
 
         private String username;
         private String password;
+
+        private boolean debugEnable             = true;
 
         private AuthType authType               = AuthType.NO_AUTH;
         private EncodingType encodingType       = EncodingType.NO_ENCODING;
@@ -127,8 +142,30 @@ public class RestClient {
             return this;
         }
 
+        public Builder setDebugEnable(boolean enable){
+            this.debugEnable = enable;
+            return this;
+        }
+
         public RestClient build() {
             return new RestClient(this);
+        }
+    }
+
+    private static class LoggingInterceptor implements Interceptor {
+
+        LogHelper logHelper = new LogHelper(RestClient.class);
+
+        @NotNull
+        @Override
+        public Response intercept(@NotNull Interceptor.Chain chain) throws IOException {
+            Request request = chain.request();
+            long t1 = System.nanoTime();
+            logHelper.d(String.format("Sending request %s on %s%n%s", request.url(), chain.connection(), request.headers()));
+            Response response = chain.proceed(request);
+            long t2 = System.nanoTime();
+            logHelper.d(String.format("Received response for %s in %.1fms%n%s", response.request().url(), (t2 - t1) / 1e6d, response.headers()));
+            return response;
         }
     }
 
@@ -149,13 +186,13 @@ public class RestClient {
     }
 
     public void POST(
-            @NonNull final String url,
-            @Nullable final String tag,
-            @NonNull final RequestParams params,
-            @NonNull final ResultHandler responder){
+            String url,
+            String tag,
+            RequestParams params,
+            ResultHandler responder){
 
         if (checkNetworkConnection(this.appContext)) {
-            responder.onFailure(url,0,ErrorCode.InternetConnectionError);
+            responder.onFailure(url,ErrorCode.InternetConnectionError);
             return;
         }
         //region Authorization Model
@@ -181,46 +218,13 @@ public class RestClient {
         }
     }
 
-    public void POST_FILE(
-            @NonNull final String url,
-            @Nullable final String tag,
-            @NonNull final RequestParams params,
-            @NonNull final ResultHandler responder){
-
-        if (checkNetworkConnection(this.appContext)) {
-            responder.onFailure(url,0,ErrorCode.InternetConnectionError);
-            return;
-        }
-        //region Authorization Model
-        AuthModel auth = new AuthModel();
-        auth.setClientId(this.clientId);
-        auth.setClientSecret(this.clientSecret);
-        auth.setSite(this.site);
-        auth.setScope(this.scope);
-        auth.setGrantType(this.grantType);
-        auth.setUsername(this.username);
-        auth.setPassword(this.password);
-        auth.setAuthType(this.authType);
-        auth.setEncodingType(this.encodingType);
-        auth.setHeaders(this.headers);
-        //endregion
-        switch (this.authType){
-            case NO_AUTH:
-                POST.file_no_Auth(getClient(), url, tag, auth, params, responder);
-                break;
-            case BASIC_AUTH:
-                POST.file_basic_Auth(getClient(),url,tag,auth,params,responder);
-                break;
-        }
-    }
-
     public void GET(
-            @NonNull final String url,
-            @Nullable final String tag,
-            @NonNull final ResultHandler responder){
+            String url,
+            String tag,
+            ResultHandler responder){
 
         if (checkNetworkConnection(this.appContext)) {
-            responder.onFailure(url,0,ErrorCode.InternetConnectionError);
+            responder.onFailure(url,ErrorCode.InternetConnectionError);
             return;
         }
         //region Authorization Model
@@ -247,13 +251,13 @@ public class RestClient {
     }
 
     public void DELETE(
-            @NonNull final String url,
-            @Nullable final String tag,
-            @NonNull final RequestParams params,
-            @NonNull final ResultHandler responder){
+            String url,
+            String tag,
+            RequestParams params,
+            ResultHandler responder){
 
         if (checkNetworkConnection(this.appContext)) {
-            responder.onFailure(url,0,ErrorCode.InternetConnectionError);
+            responder.onFailure(url,ErrorCode.InternetConnectionError);
             return;
         }
         //region Authorization Model
@@ -280,13 +284,13 @@ public class RestClient {
     }
 
     public void PUT(
-            @NonNull final String url,
-            @Nullable final String tag,
-            @NonNull final RequestParams params,
-            @NonNull final ResultHandler responder){
+            String url,
+            String tag,
+            RequestParams params,
+            ResultHandler responder){
 
         if (checkNetworkConnection(this.appContext)) {
-            responder.onFailure(url,0,ErrorCode.InternetConnectionError);
+            responder.onFailure(url,ErrorCode.InternetConnectionError);
             return;
         }
         //region Authorization Model

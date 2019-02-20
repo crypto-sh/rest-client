@@ -2,21 +2,17 @@ package com.github.restclient;
 
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.collection.ArrayMap;
-
 import com.github.library.RestClient;
-
 import com.github.library.enums.AuthType;
-
 import com.github.library.enums.RequestBodyType;
 import com.github.library.response.ResponseJsonHandler;
 import com.github.library.utils.RequestParams;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArrayMap;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,25 +30,19 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.text).setOnClickListener(view -> {
             RequestParams params = new RequestParams(RequestBodyType.FormData);
-            params.put("page", "1");
-
-
-            restClient.POST("https://google.com",
+            restClient.POST("https://sandbox.vaslapp.com",
                     "",
                     new RequestParams(),
                     new ResponseJsonHandler() {
-
                         @Override
                         protected void onSuccess(String result) {
                             Log.d(TAG, "response " + result);
                         }
-
                         @Override
                         public void onFailure(int errorCode, String errorMsg) {
                             Log.d(TAG, "onFailure " + errorMsg);
                         }
-                    }
-            );
+                    });
         });
     }
 
@@ -62,8 +52,10 @@ public class MainActivity extends AppCompatActivity {
         header.put("accept-language", "en");
 
         restClient = new RestClient.Builder(this)
-                .setAuthorization("http://sandbox.vaslapp.com/oauth/token",
-                        "c3bdf6c5-508f-48ae-9af4-243a24072e31", "LnDbEo3yDDcswKMC3h4H", AuthType.BASIC_AUTH)
+                .setAuthorization("https://sandbox.vaslapp.com/oauth/token",
+                        "c3bdf6c5-508f-48ae-9af4-243a24072e31",
+                        "LnDbEo3yDDcswKMC3h4H",
+                        AuthType.BASIC_AUTH)
                 .setUserInfo("android-XoaM8ODAYVcKnB16ob8N", "DOI0qOIa0KT6ViYmS1k6")
                 .setHeader(header)
                 .build();

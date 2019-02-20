@@ -8,7 +8,8 @@ public enum RequestBodyType {
     FormUrlEncode(1),
     RawJSON(2),
     RawTEXTPlain(3),
-    Binary(4),;
+    Binary(4),
+    MultiPart(5);
 
     int value = -1;
 

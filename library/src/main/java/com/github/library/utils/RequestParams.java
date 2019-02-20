@@ -1,21 +1,22 @@
 package com.github.library.utils;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import com.github.library.enums.RequestBodyType;
 import com.github.library.helper.LogHelper;
 import com.github.library.helper.general;
 import com.github.library.model.FileModel;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
+
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 
@@ -36,119 +37,136 @@ public class RequestParams {
 
     private LinkedHashMap<String, List<Object>> paramsArray = new LinkedHashMap<>();
 
-    private RequestBodyType type = RequestBodyType.FormData;
+    private RequestBodyType type;
 
     private LogHelper logHelper = new LogHelper(RequestBody.class);
 
     public RequestParams() {
-
+        this.type = RequestBodyType.FormUrlEncode;
     }
 
     public RequestParams(RequestBodyType type) {
         this.type = type;
     }
 
-    public void put(String plainText){
+    public void put(String plainText) {
         this.plainText = plainText;
     }
 
-    public void put(String contentType,byte[] binaryInput){
+    public void put(String contentType, byte[] binaryInput) {
         this.contentType = contentType;
         this.binaryInput = binaryInput;
     }
 
+    public void put(String key, Object value) {
+        if (general.StringIsEmptyOrNull(key)) {
+            return;
+        }
+        params.put(key, value);
+    }
+
     public void put(String key, String value) {
-        if (general.StringIsEmptyOrNull(key) || general.StringIsEmptyOrNull(value)){
+        if (general.StringIsEmptyOrNull(key) || general.StringIsEmptyOrNull(value)) {
             return;
         }
         params.put(key, value);
     }
 
     public void put(String key, Integer value) {
-        if (general.StringIsEmptyOrNull(key) ||  value == null){
+        if (general.StringIsEmptyOrNull(key) || value == null) {
+            return;
+        }
+        params.put(key, value);
+    }
+
+    public void put(String key, Long value) {
+        if (general.StringIsEmptyOrNull(key) || value == null) {
             return;
         }
         params.put(key, value);
     }
 
     public void put(String key, Float value) {
-        if (general.StringIsEmptyOrNull(key) ||  value == null){
+        if (general.StringIsEmptyOrNull(key) || value == null) {
             return;
         }
         params.put(key, value);
     }
 
     public void put(String key, Double value) {
-        if (general.StringIsEmptyOrNull(key) ||  value == null){
+        if (general.StringIsEmptyOrNull(key) || value == null) {
             return;
         }
         params.put(key, value);
     }
 
-    public void put(String key, FileModel value){
-        if (general.StringIsEmptyOrNull(key) ||  value == null){
+    public void put(String key, FileModel value) {
+        if (general.StringIsEmptyOrNull(key) || value == null) {
             return;
         }
-        fileParams.put(key,value);
+        fileParams.put(key, value);
     }
 
     public void put(String key, boolean value) {
-        if (general.StringIsEmptyOrNull(key)){
+        if (general.StringIsEmptyOrNull(key)) {
             return;
         }
         params.put(key, value);
     }
 
     public void put(String key, JSONObject value) {
-        if (general.StringIsEmptyOrNull(key) ||  value == null){
+        if (general.StringIsEmptyOrNull(key) || value == null) {
             return;
         }
         params.put(key, value);
     }
 
     public void put(String key, List<Object> values) {
-        if (general.StringIsEmptyOrNull(key) ||  values == null){
+        if (general.StringIsEmptyOrNull(key) || values == null) {
             return;
         }
         if (paramsArray.get(key) != null) {
             List<Object> items = paramsArray.get(key);
-            values.addAll(items);
+            if (items != null)
+                values.addAll(items);
         }
         paramsArray.put(key, values);
     }
 
-    public void add(String key, List<Object> values){
-        if (general.StringIsEmptyOrNull(key) ||  values == null){
+    public void add(String key, List<Object> values) {
+        if (general.StringIsEmptyOrNull(key) || values == null) {
             return;
         }
-        if (paramsArray.get(key) != null){
-            values.addAll(paramsArray.get(key));
+        if (paramsArray.get(key) != null) {
+            values.addAll(Objects.requireNonNull(paramsArray.get(key)));
         }
-        paramsArray.put(key,values);
+        paramsArray.put(key, values);
     }
 
-    public void putContent(String key, List<Object> values){
-        if (general.StringIsEmptyOrNull(key) ||  values == null){
+    public void putContent(String key, List<Object> values) {
+        if (general.StringIsEmptyOrNull(key) || values == null) {
             return;
         }
         ArrayList<Object> items = new ArrayList<>();
-        if (paramsArray.get(key) != null){
-            items.addAll(paramsArray.get(key));
+        if (paramsArray.get(key) != null) {
+            items.addAll(Objects.requireNonNull(paramsArray.get(key)));
         }
-        for (Object item : values){
+        for (Object item : values) {
             items.add(item.toString());
         }
-        paramsArray.put(key,items);
+        paramsArray.put(key, items);
     }
 
     public void add(String key, String value) {
-        if (general.StringIsEmptyOrNull(key) ||  value == null){
+        if (general.StringIsEmptyOrNull(key) || value == null) {
             return;
         }
         ArrayList<Object> values;
         if (paramsArray.get(key) != null) {
             values = (ArrayList<Object>) paramsArray.get(key);
-            values.add(value);
+            if (values != null) {
+                values.add(value);
+            }
         } else {
             values = new ArrayList<>();
             values.add(value);
@@ -157,52 +175,84 @@ public class RequestParams {
     }
 
     public RequestBody getRequestForm() {
-        switch (type){
+        if (getFileParams().size() > 0) {
+            //for post File You should choose Multipart Type
+            type = RequestBodyType.MultiPart;
+        }
+        switch (type) {
             case RawTEXTPlain:
                 return RequestBody.create(MediaType.parse("text/plain; charset=utf-8"), plainText);
             case RawJSON:
                 JSONObject object = new JSONObject();
                 try {
-                    for (String key : params.keySet()) {
-                        object.put(key, params.get(key));
+                    for (String key : getParams().keySet()) {
+                        object.put(key, getParams().get(key));
                     }
-                    for (String key : paramsArray.keySet()) {
-                        for (Object item : paramsArray.get(key)) {
+                    for (String key : getParamsArray().keySet()) {
+                        for (Object item : Objects.requireNonNull(getParamsArray().get(key))) {
                             object.put(key, item);
                         }
                     }
                 } catch (JSONException e) {
-                    //throw new JSONException("Exception During Create JSON");
                     logHelper.e(e);
                 }
                 return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), object.toString());
             case Binary:
-                return RequestBody.create(MediaType.parse(contentType),(byte[]) binaryInput);
-            default: //FormData
+                return RequestBody.create(MediaType.parse(contentType), binaryInput);
+            case MultiPart:
+                MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                for (String key : getParams().keySet()) {
+                    builder.addFormDataPart(key, (String) Objects.requireNonNull(getParams().get(key)));
+                }
+                for (String key : getParamsArray().keySet()) {
+                    for (Object item : Objects.requireNonNull(getParamsArray().get(key))) {
+                        builder.addFormDataPart(key, (String) item);
+                    }
+                }
+                LinkedHashMap<String, FileModel> fileParams = getFileParams();
+                for (String key : fileParams.keySet()) {
+                    FileModel uploadFile = fileParams.get(key);
+                    if (uploadFile != null) {
+                        builder.addFormDataPart(key, uploadFile.getFilenName(), RequestBody.create(uploadFile.getMimeType(), uploadFile.getFile()));
+                    }
+                }
+                return builder.build();
+            case FormData:
+            case FormUrlEncode:
+            default: {
                 FormBody.Builder formBody = new FormBody.Builder();
                 for (String key : params.keySet()) {
 
-                    formBody.addEncoded(key, params.get(key).toString());
+                    formBody.addEncoded(key, String.valueOf(params.get(key)));
                 }
                 for (String key : paramsArray.keySet()) {
-                    for (Object item : paramsArray.get(key)) {
+                    for (Object item : Objects.requireNonNull(paramsArray.get(key))) {
                         formBody.addEncoded(key, item.toString());
                     }
                 }
                 return formBody.build();
+            }
         }
     }
 
-    public LinkedHashMap<String, Object> getParams() {
+    public RequestBodyType getType() {
+        return type;
+    }
+
+    private LinkedHashMap<String, Object> getParams() {
         return params;
     }
 
-    public LinkedHashMap<String, FileModel> getFileParams() {
+    private LinkedHashMap<String, FileModel> getFileParams() {
         return fileParams;
     }
 
+    private LinkedHashMap<String, List<Object>> getParamsArray() {
+        return paramsArray;
+    }
+
     public void setParamsArray(LinkedHashMap<String, List<Object>> paramsArray) {
-        if (paramsArray == null){
+        if (paramsArray == null) {
             return;
         }
         this.paramsArray = paramsArray;
