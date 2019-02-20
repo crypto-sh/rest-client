@@ -25,7 +25,7 @@ latest version on jitpack [![](https://jitpack.io/v/alishatergholi/RestClient.sv
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:rest-client:[latest_version](https://github.com/vaslco/vaslAppSdk/releases/latest)'
+        implementation 'com.github.alishatergholi:rest-client:(latest_version)[https://github.com/vaslco/vaslAppSdk/releases/latest]'
     }
 ```
 
