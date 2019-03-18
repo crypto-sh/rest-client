@@ -5,6 +5,9 @@ import org.json.JSONObject;
 
 public class Token {
 
+    //{"access_token":"BQDYUkSLqTNiKNX8BEy_6zixC7dNpuHYSEQCMxVH3VvhL9kAjbLeHzpiqMZ5eHiRriqZoPPy-DyAzw_Le_w",
+    // "token_type":"Bearer",
+    // "expires_in":3600,"scope":""}
     public Long expires_in;
     public String token_type;
     public String refresh_token;

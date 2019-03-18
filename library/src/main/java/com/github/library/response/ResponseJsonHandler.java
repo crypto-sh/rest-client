@@ -1,5 +1,6 @@
 package com.github.library.response;
 
+
 import android.os.Handler;
 import android.os.Looper;
 
@@ -58,9 +59,9 @@ public abstract class ResponseJsonHandler extends ResultHandler {
         new Handler(Looper.getMainLooper()).post(() -> onFailure(errorCode.getCode(),errorCode.getDescription()));
     }
 
-    protected void onSuccess(JSONObject result){}
+    protected abstract void onSuccess(JSONObject result);
 
-    protected void onSuccess(JSONArray result){}
+    protected abstract void onSuccess(JSONArray result);
 
     protected abstract void onSuccess(String result);
 

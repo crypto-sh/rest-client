@@ -33,7 +33,9 @@ public class Access implements AuthorizationParams {
     }
 
     protected static OAuthResponse getAccessToken(OAuth2Client oAuth2Client) throws IOException {
-        FormBody.Builder formBodyBuilder = new FormBody.Builder();
+        FormBody.Builder formBodyBuilder = new FormBody
+                .Builder();
+        formBodyBuilder.addEncoded("grant_type","client_credentials");
         general.postAddIfValid(formBodyBuilder, oAuth2Client.getFieldsAsMap());
 
         Request.Builder request = new Request.Builder()
@@ -58,14 +60,15 @@ public class Access implements AuthorizationParams {
         Response response = oAuth2Client.getOkHttpClient()
                 .newBuilder()
                 .build()
-                .newCall(request.newBuilder().header(HEADER_AUTHORIZATION, credential).build()).execute();
+                .newCall(request.newBuilder().header(HEADER_AUTHORIZATION, credential).build())
+                .execute();
         return new OAuthResponse(response);
     }
+
 //    protected static Authenticator getAuthenticator(final OAuth2Client oAuth2Client, final AuthType type) {
 //        return new Authenticator() {
 //            @Override
 //            public Request authenticate(Route route, Response response) throws IOException {
-//
 //                String credential = Credentials.basic(oAuth2Client.getClientId(), oAuth2Client.getClientSecret());
 //                return response.request().newBuilder().header(HEADER_AUTHORIZATION, credential).build();
 //            }
