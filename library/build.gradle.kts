@@ -30,17 +30,13 @@ android {
         sourceCompatibility  = JavaVersion.VERSION_1_8
         targetCompatibility  = JavaVersion.VERSION_1_8
     }
-
-
 }
 
 dependencies {
-
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${rootProject.extra.get("kotlinVersion")}")
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("com.squareup.okhttp3:okhttp:3.12.0")
-
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.1.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.1.1")
