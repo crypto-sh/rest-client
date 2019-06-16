@@ -33,23 +33,7 @@ public class OAuth2Client implements AuthorizationParams {
         return Access.refreshAccessToken(refreshToken, this);
     }
 
-    public void refreshAccessToken(final String refreshToken, final OAuthResponseCallback callback) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                OAuthResponse response;
-//                try {
-//                    response = refreshAccessToken(refreshToken);
-//                    callback.onResponse(response);
-//                } catch (Exception e) {
-//                    response = new OAuthResponse(e);
-//                    callback.onResponse(response);
-//                }
-//            }
-//        }).start();
-    }
-
-    public OAuthResponse requestAccessToken() throws IOException {
+    private OAuthResponse requestAccessToken() throws IOException {
         if (this.authModel.getGrantType() == null)
             this.authModel.setGrantType(GRANT_TYPE_PASSWORD);
         return Access.getAccessToken(this);
@@ -102,12 +86,12 @@ public class OAuth2Client implements AuthorizationParams {
 
     Map<String, String> getFieldsAsMap() {
         Map<String, String> oAuthParams = new HashMap<>();
-        oAuthParams.put(POST_CLIENT_ID, authModel.getClientId());
-        oAuthParams.put(POST_CLIENT_SECRET, authModel.getClientSecret());
-        oAuthParams.put(POST_GRANT_TYPE, authModel.getGrantType());
-        oAuthParams.put(POST_SCOPE, authModel.getScope());
-        oAuthParams.put(POST_USERNAME, authModel.getUsername());
-        oAuthParams.put(POST_PASSWORD, authModel.getPassword());
+        oAuthParams.put(POST_CLIENT_ID      , authModel.getClientId());
+        oAuthParams.put(POST_CLIENT_SECRET  , authModel.getClientSecret());
+        oAuthParams.put(POST_GRANT_TYPE     , authModel.getGrantType());
+        oAuthParams.put(POST_USERNAME       , authModel.getUsername());
+        oAuthParams.put(POST_PASSWORD       , authModel.getPassword());
+        oAuthParams.put(POST_TOKEN          , authModel.getToken());
         return oAuthParams;
     }
 

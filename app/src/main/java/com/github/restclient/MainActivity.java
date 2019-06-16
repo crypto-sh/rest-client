@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         initRestClient();
 
-        //{"album":{"album_type":"album","artists":[{"external_urls":{"spotify":"https:\/\/open.spotify.com\/artist\/08td7MxkoHQkXnWAYD8d6Q"},"href":"https:\/\/api.spotify.com\/v1\/artists\/08td7MxkoHQkXnWAYD8d6Q","id":"08td7MxkoHQkXnWAYD8d6Q","name":"Tania Bowra","type":"artist","uri":"spotify:artist:08td7MxkoHQkXnWAYD8d6Q"}],"available_markets":["AD","AE","AR","AT","AU","BE","BG","BH","BO","BR","CA","CH","CL","CO","CR","CY","CZ","DE","DK","DO","DZ","EC","EE","EG","ES","FI","FR","GB","GR","GT","HK","HN","HU","ID","IE","IL","IN","IS","IT","JO","JP","KW","LB","LI","LT","LU","LV","MA","MC","MT","MX","MY","NI","NL","NO","NZ","OM","PA","PE","PH","PL","PS","PT","PY","QA","RO","SA","SE","SG","SK","SV","TH","TN","TR","TW","US","UY","VN","ZA"],"external_urls":{"spotify":"https:\/\/open.spotify.com\/album\/6akEvsycLGftJxYudPjmqK"},"href":"https:\/\/api.spotify.com\/v1\/albums\/6akEvsycLGftJxYudPjmqK","id":"6akEvsycLGftJxYudPjmqK","images":[{"height":640,"url":"https:\/\/i.scdn.co\/image\/a529b65b4bd322b16bee34672ce45278e890e176","width":640},{"height":300,"url":"https:\/\/i.scdn.co\/image\/985cc10acdbbedb6a16d7c74f9e23553e2b28dbc","width":300},{"height":64,"url":"https:\/\/i.scdn.co\/image\/37b46a2662c09502885d1804c1c865b199cc3d67","width":64}],"name":"Place In The Sun","release_date":"2004-02-02","release_date_precision":"day","total_tracks":11,"type":"album","uri":"spotify:album:6akEvsycLGftJxYudPjmqK"},"artists":[{"external_urls":{"spotify":"https:\/\/open.spotify.com\/artist\/08td7MxkoHQkXnWAYD8d6Q"},"href":"https:\/\/api.spotify.com\/v1\/artists\/08td7MxkoHQkXnWAYD8d6Q","id":"08td7MxkoHQkXnWAYD8d6Q","name":"Tania Bowra","type":"artist","uri":"spotify:artist:08td7MxkoHQkXnWAYD8d6Q"}],"available_markets":["AD","AE","AR","AT","AU","BE","BG","BH","BO","BR","CA","CH","CL","CO","CR","CY","CZ","DE","DK","DO","DZ","EC","EE","EG","ES","FI","FR","GB","GR","GT","HK","HN","HU","ID","IE","IL","IN","IS","IT","JO","JP","KW","LB","LI","LT","LU","LV","MA","MC","MT","MX","MY","NI","NL","NO","NZ","OM","PA","PE","PH","PL","PS","PT","PY","QA","RO","SA","SE","SG","SK","SV","TH","TN","TR","TW","US","UY","VN","ZA"],"disc_number":1,"duration_ms":276773,"explicit":false,"external_ids":{"isrc":"AUCR10410001"},"external_urls":{"spotify":"https:\/\/open.spotify.com\/track\/2TpxZ7JUBn3uw46aR7qd6V"},"href":"https:\/\/api.spotify.com\/v1\/tracks\/2TpxZ7JUBn3uw46aR7qd6V","id":"2TpxZ7JUBn3uw46aR7qd6V","is_local":false,"name":"All I Want","popularity":1,"preview_url":"https:\/\/p.scdn.co\/mp3-preview\/12b8cee72118f995f5494e1b34251e4ac997445e?cid=50ff9f0569f0439087bbc05acb38db43","track_number":1,"type":"track","uri":"spotify:track:2TpxZ7JUBn3uw46aR7qd6V"}
 
         findViewById(R.id.text).setOnClickListener(view -> {
             RequestParams params = new RequestParams(RequestBodyType.FormData);
@@ -67,13 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRestClient() {
         ArrayMap<String, String> header = new ArrayMap<>();
+
+        String clientId     = "50ff9f0569f0439087bbc05acb38db43";
+        String clientSecret = "785e208d5eef44a28941bf47146c0873";
+
         header.put("Content-Type", "application/x-www-form-urlencoded");
+
         restClient = new RestClient.Builder(this)
-                .setAuthorization(
-                        "",
-                        "",
-                        "",
-                        AuthType.BASIC_AUTH)
+                .setAuthorizationOauth2("https://accounts.spotify.com/api/token",clientId,clientSecret)
                 .setDebugEnable(true)
                 .setHeader(header)
                 .build();

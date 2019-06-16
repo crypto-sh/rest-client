@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.github.library.Interface.ResultHandler;
+import com.github.library.enums.AuthType;
 import com.github.library.enums.ErrorCode;
 import com.github.library.helper.general;
 import com.github.library.model.AuthModel;
@@ -40,11 +41,6 @@ public class DELETE extends baseMethod {
                     .addHeader("os"             , "android")
                     .delete(params.getRequestForm());
 
-            switch (authModel.getEncodingType()){
-                case GZIP:
-                    request.addHeader("Accept-Encoding","gzip");
-                    break;
-            }
             if (responder instanceof ResponseTextHandler){
                 request.addHeader("Content-Type", "application/text");
                 request.addHeader("Accept", "application/text");
@@ -55,6 +51,11 @@ public class DELETE extends baseMethod {
                 request.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.addHeader("Accept", "application/octet-stream");
             }
+
+            if (authModel.getAuthType() == AuthType.BASIC_AUTH) {
+                request.addHeader("Authorization", String.format("Basic %", authModel.getBasicAuthorization()));
+            }
+
             ArrayMap<String, String> headers = authModel.getHeaders();
             for (int index = 0;index < headers.size();index++){
                 try {
@@ -98,7 +99,7 @@ public class DELETE extends baseMethod {
             auth.requestAccessToken(response -> {
                 if (response.isSuccessful()) {
                     switch (authModel.getAuthType()){
-                        case BASIC_AUTH:
+                        case OAUTH2_AUTH:
                             headers.put("Authorization", String.format("Bearer %s", response.getAccessToken()));
                             break;
                     }

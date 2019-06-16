@@ -21,7 +21,7 @@ import com.github.library.enums.ErrorCode;
  */
 public abstract class ResponseJsonHandler extends ResultHandler {
 
-    String data = "";
+    private String data = "";
 
     @Override
     protected void onSuccess(String url, byte[] result) {

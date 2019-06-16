@@ -11,8 +11,6 @@ import okhttp3.ResponseBody;
 
 public class OAuthResponse {
 
-    //{"access_token":"BQDYUkSLqTNiKNX8BEy_6zixC7dNpuHYSEQCMxVH3VvhL9kAjbLeHzpiqMZ5eHiRriqZoPPy-DyAzw_Le_w","token_type":"Bearer","expires_in":3600,"scope":""}
-
     private Long expiresAt;
     private String responseBody;
     private Token token;
@@ -21,7 +19,6 @@ public class OAuthResponse {
     private boolean jsonParsed;
 
     public OAuthResponse(Response response) throws IOException {
-
         this.response = response;
         if (response != null) {
             ResponseBody body = response.body();

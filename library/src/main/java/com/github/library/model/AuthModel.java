@@ -4,23 +4,24 @@ package com.github.library.model;
 import androidx.collection.ArrayMap;
 
 import com.github.library.enums.AuthType;
-import com.github.library.enums.EncodingType;
+
+import okhttp3.Credentials;
+
 
 public class AuthModel {
-
 
     private String clientId;
     private String clientSecret;
     private String site;
 
-    private String scope;
+    private String token;
     private String grantType;
 
     private String username;
     private String password;
 
     private AuthType authType;
-    private EncodingType encodingType;
+
     private ArrayMap<String,String> headers;
 
     public AuthModel(){
@@ -51,12 +52,12 @@ public class AuthModel {
         this.site = site;
     }
 
-    public String getScope() {
-        return scope;
+    public String getToken() {
+        return token;
     }
 
-    public void setScope(String scope) {
-        this.scope = scope;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getGrantType() {
@@ -91,12 +92,8 @@ public class AuthModel {
         this.authType = authType;
     }
 
-    public EncodingType getEncodingType() {
-        return encodingType;
-    }
-
-    public void setEncodingType(EncodingType encodingType) {
-        this.encodingType = encodingType;
+    public String getBasicAuthorization() {
+        return Credentials.basic(getClientId(), getClientSecret());
     }
 
     public ArrayMap<String, String> getHeaders() {

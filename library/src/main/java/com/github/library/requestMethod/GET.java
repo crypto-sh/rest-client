@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.github.library.Interface.ResultHandler;
+import com.github.library.enums.AuthType;
 import com.github.library.enums.ErrorCode;
 import com.github.library.helper.general;
 import com.github.library.model.AuthModel;
@@ -32,6 +33,7 @@ public class GET extends baseMethod {
             @Nullable String tag,
             @NonNull AuthModel authModel,
             @NonNull final ResultHandler responder) {
+        Runnable runnable = () -> responder.onFailure(url, ErrorCode.RuntimeException);
         try {
             final Request.Builder request = new Request.Builder()
                     .url(url)
@@ -40,11 +42,11 @@ public class GET extends baseMethod {
                     .addHeader("os", "android")
                     .get();
 
-            switch (authModel.getEncodingType()){
-                case GZIP:
-                    request.addHeader("Accept-Encoding","gzip");
-                    break;
+            if (authModel.getAuthType() == AuthType.BASIC_AUTH) {
+                request.addHeader("Authorization", String.format("Basic %", authModel.getBasicAuthorization()));
             }
+
+
             if (responder instanceof ResponseTextHandler){
                 request.addHeader("Content-Type", "application/text");
                 request.addHeader("Accept", "application/text");
@@ -55,6 +57,7 @@ public class GET extends baseMethod {
                 request.addHeader("Content-Type", "application/x-www-form-urlencoded");
                 request.addHeader("Accept", "application/octet-stream");
             }
+
             ArrayMap<String, String> headers = authModel.getHeaders();
             for (int index = 0;index < headers.size();index++){
                 try {
@@ -66,7 +69,7 @@ public class GET extends baseMethod {
                         }
                     }
                 } catch (Exception e) {
-                    new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,ErrorCode.RuntimeException));
+                    new Handler(Looper.getMainLooper()).post(runnable);
                 }
             }
             client.newCall(request.build()).enqueue(new Callback() {
@@ -81,11 +84,11 @@ public class GET extends baseMethod {
                 }
             });
         } catch (Exception ex) {
-            new Handler(Looper.getMainLooper()).post(() -> responder.onFailure(url,ErrorCode.RuntimeException));
+            new Handler(Looper.getMainLooper()).post(runnable);
         }
     }
 
-    public synchronized static void basic_Auth(
+    public synchronized static void oauth2_Auth(
             @NonNull final OkHttpClient client,
             @NonNull final String url,
             @Nullable final String tag,
@@ -96,10 +99,8 @@ public class GET extends baseMethod {
             OAuth2Client auth = new OAuth2Client(client,headers,authModel);
             auth.requestAccessToken(response -> {
                 if (response.isSuccessful()) {
-                    switch (authModel.getAuthType()){
-                        case BASIC_AUTH:
-                            headers.put("Authorization", String.format("Bearer %s", response.getAccessToken()));
-                            break;
+                    if (authModel.getAuthType() == AuthType.OAUTH2_AUTH) {
+                        headers.put("Authorization", String.format("Bearer %s", response.getAccessToken()));
                     }
                     authModel.setHeaders(headers);
                     no_Auth(client,url,tag,authModel,responder);

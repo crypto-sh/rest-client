@@ -213,7 +213,7 @@ public class RequestParams {
                 for (String key : fileParams.keySet()) {
                     FileModel uploadFile = fileParams.get(key);
                     if (uploadFile != null) {
-                        builder.addFormDataPart(key, uploadFile.getFilenName(), RequestBody.create(uploadFile.getMimeType(), uploadFile.getFile()));
+                        builder.addFormDataPart(key, uploadFile.getFileName(), RequestBody.create(uploadFile.getMimeType(), uploadFile.getFile()));
                     }
                 }
                 return builder.build();
