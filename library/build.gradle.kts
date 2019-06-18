@@ -2,6 +2,10 @@ plugins {
     id("com.android.library")
     id("com.github.dcendents.android-maven") // ADD THIS
 }
+apply {
+    plugin("kotlin-android")
+    plugin("kotlin-android-extensions")
+}
 
 group   = "com.github.rest-client"
 version = rootProject.extra.get("version_name")!!
@@ -26,17 +30,16 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility  = JavaVersion.VERSION_1_8
-        targetCompatibility  = JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${rootProject.extra.get("kotlinVersion")}")
     implementation("androidx.appcompat:appcompat:1.0.2")
-    implementation("com.squareup.okhttp3:okhttp:3.14.2")
+    implementation("com.squareup.okhttp3:okhttp:3.12.3")
+    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test:runner:1.2.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
