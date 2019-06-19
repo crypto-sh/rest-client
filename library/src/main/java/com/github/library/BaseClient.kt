@@ -10,28 +10,31 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import java.io.IOException
+import java.lang.Exception
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
 
 abstract class BaseClient {
 
+    val log = LogHelper(this::class.java)
+
     var appContext: WeakReference<Context>? = null
 
-    var clientId        : String = ""
-    var clientSecret    : String = ""
-    var site            : String = ""
+    var clientId: String = ""
+    var clientSecret: String = ""
+    var site: String = ""
 
-    var token           : String = ""
+    var token: String = ""
 
-    var grantType       : String = ""
+    var grantType: String = ""
 
-    var username        : String = ""
-    var password        : String = ""
+    var username: String = ""
+    var password: String = ""
 
-    var baseUrl         : String = ""
+    var baseUrl: String = ""
 
-    var authType        : AuthType = AuthType.NO_AUTH
+    var authType: AuthType = AuthType.NO_AUTH
 
     var headers: ArrayMap<String, String>? = null
 
@@ -39,8 +42,7 @@ abstract class BaseClient {
 
     var debugEnable = true
 
-    val authModel: AuthModel
-        get() {
+    val authModel: AuthModel get() {
             val auth = AuthModel()
             auth.clientId = this.clientId
             auth.clientSecret = this.clientSecret
@@ -53,7 +55,6 @@ abstract class BaseClient {
             auth.headers = this.headers
             return auth
         }
-
 
     private class LoggingInterceptor : Interceptor {
 
@@ -100,25 +101,22 @@ abstract class BaseClient {
         }
     }
 
+    fun cancelAllRequest() {
+        for (call in getClient(timeMilliSecond, debugEnable)?.dispatcher()?.runningCalls()!!) {
+            call.cancel()
+        }
+    }
 
-    //    public void cancelAllRequest() {
-    //        for (Call call : getClient(timeMilliSecond,debugEnable).dispatcher().queuedCalls()) {
-    //            call.cancel();
-    //        }
-    //    }
-    //
-    //    public void cancelCallWithTag(String tag) {
-    //        for (Call call : getClient(timeMilliSecond,debugEnable).dispatcher().queuedCalls()) {
-    //            try {
-    //                Object item = call.request().tag();
-    //                if (item != null){
-    //                    if (item.equals(tag))
-    //                        call.cancel();
-    //                }
-    //            } catch (Exception e) {
-    //                e.printStackTrace();
-    //            }
-    //        }
-    //    }
+    fun cancelCallWithTag(tag: String) {
+        for (call in getClient(timeMilliSecond, debugEnable)?.dispatcher()?.runningCalls()!!) {
+            try {
+                if (call.request().tag()?.equals(tag)!!) {
+                    call.cancel()
+                }
+            } catch (e: Exception) {
+                log.e(e = e)
+            }
+        }
+    }
 
 }

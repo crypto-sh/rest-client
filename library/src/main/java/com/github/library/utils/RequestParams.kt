@@ -20,7 +20,9 @@ import okhttp3.RequestBody
 
 
 /**
+ *
  * Created by alishatergholi on 2/21/18.
+ *
  */
 class RequestParams {
 
@@ -153,36 +155,36 @@ class RequestParams {
         params[key] = value
     }
 
-    fun put(key: String, value: Int?) {
-        if (General.stringIsEmptyOrNull(key) || value == null) {
+    fun put(key: String, value: Int) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         params[key] = value
     }
 
-    fun put(key: String, value: Long?) {
-        if (General.stringIsEmptyOrNull(key) || value == null) {
+    fun put(key: String, value: Long) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         params[key] = value
     }
 
-    fun put(key: String, value: Float?) {
-        if (General.stringIsEmptyOrNull(key) || value == null) {
+    fun put(key: String, value: Float) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         params[key] = value
     }
 
-    fun put(key: String, value: Double?) {
-        if (General.stringIsEmptyOrNull(key) || value == null) {
+    fun put(key: String, value: Double) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         params[key] = value
     }
 
-    fun put(key: String, value: FileModel?) {
-        if (General.stringIsEmptyOrNull(key) || value == null) {
+    fun put(key: String, value: FileModel) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         fileParams[key] = value
@@ -195,15 +197,15 @@ class RequestParams {
         params[key] = value
     }
 
-    fun put(key: String, value: JSONObject?) {
-        if (General.stringIsEmptyOrNull(key) || value == null) {
+    fun put(key: String, value: JSONObject) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         params[key] = value
     }
 
-    fun put(key: String, values: MutableList<Any>?) {
-        if (General.stringIsEmptyOrNull(key) || values == null) {
+    fun put(key: String, values: MutableList<Any>) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         if (this.paramsArray[key] != null) {
@@ -214,8 +216,8 @@ class RequestParams {
         this.paramsArray[key] = values
     }
 
-    fun add(key: String, values: MutableList<Any>?) {
-        if (General.stringIsEmptyOrNull(key) || values == null) {
+    fun add(key: String, values: MutableList<Any>) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         if (this.paramsArray[key] != null) {
@@ -224,8 +226,8 @@ class RequestParams {
         this.paramsArray[key] = values
     }
 
-    fun putContent(key: String, values: List<Any>?) {
-        if (General.stringIsEmptyOrNull(key) || values == null) {
+    fun putContent(key: String, values: List<Any>) {
+        if (General.stringIsEmptyOrNull(key)) {
             return
         }
         val items = ArrayList<Any>()

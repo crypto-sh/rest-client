@@ -23,7 +23,8 @@ abstract class ResponseJsonHandler<T>(private val cls: Class<T>) : ResultHandler
         try {
             try {
                 data = result.readString(Charset.forName("UTF8")).toString()
-                Handler(Looper.getMainLooper()).post { onSuccess(Gson().fromJson(data,cls)) }
+                val response = Gson().fromJson(data,cls)
+                Handler(Looper.getMainLooper()).post { onSuccess(response) }
             } catch (e: JSONException) {
                 Handler(Looper.getMainLooper()).post { onFailure(url, ErrorCode.ParseDataException) }
             }

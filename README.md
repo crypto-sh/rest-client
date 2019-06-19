@@ -4,7 +4,7 @@ RestClient
 Type-safe HTTP client for Android and Java by Square, Inc.
 
 
-implement Oauth2 Authorization
+Library for call RestApi service with different type of Authorization.  
 
 
 download
@@ -18,14 +18,8 @@ latest version on jitpack [![](https://jitpack.io/v/alishatergholi/RestClient.sv
         maven { url 'https://jitpack.io' }
     }
     
-    //java version required
-    compileOptions {
-        sourceCompatibility  = JavaVersion.VERSION_1_8
-        targetCompatibility  = JavaVersion.VERSION_1_8
-    }
-    
     dependencies {
-        implementation 'com.github.alishatergholi:rest-client:1.1.2'
+        implementation 'com.github.alishatergholi:rest-client:1.1.3'
     }
 ```
 
@@ -34,44 +28,60 @@ latest version on jitpack [![](https://jitpack.io/v/alishatergholi/RestClient.sv
 
 How do i use RestClient
 =======================
-```java
-    RestClient client = new RestClient
-             .Builder(context)
-             /* for add custom header you need 
-             ArrayMap<String,String> header = new ArrayMap<>();
-             header.put("appid","0e8f8fd2-1acb-11e7-8ab0-ac162d7938f0");
-             header.put("accept-language", "fa");
-             .setHeader(header)
-             */
-             /* for add Authorization Header */
-             .setAuthorization("Authorization url","clientId","client",AuthType.BASIC_AUTH)
-             .setUserInfo("username for Authorization","password for Authorization")
-             .build();
+```kotlin
+    /**
+    *
+    * add custom header into RestClient  
+    * 
+    */
+    val headers = ArrayMap<String,String>()
+    headers["Cache-Control"] = "no-cache"
+    headers["accept-encoding"] = "gzip, deflate"
+            
+    /**
+    * 
+    * for using RestClient you need to create instance of library with Base Url 
+    * 
+    */        
+    val restClient = RestClient.Builder(this)
+            .setBaseUrl("Base URL")
+            .setAuthorizationOauth2("AuthoriaztionUrl","clientId","clientSecret")
+            .setDebugEnable(true)
+            .setHeader(headers)
+            .build()
     
-    //for add body use.
-    RequestParams params = new RequestParams(RequestBodyType.FormData);
-    params.put("key","value");
+    /**
+    * 
+    * You can add body with RequestParams 
+    * also you can define type of body with RequestBodyType 
+    * default RequestBodyType is FormUrlEncode
+    * 
+    */
+    val params = RequestParams(RequestBodyType.FormData)
+    params.put("key","value")
     
-    client.POST("url",
-                "tag " /*you can set tag when you need to cancel your service*/,
-                params /* except get method we can add body for other method as body */,
-                new ResponseTextHandler() {
-                        @Override
-                        protected void onSuccess(String result) {
-                            Log.d(TAG,result);
-                        }
-                        
-                        @Override
-                        public void onProgress(double percent, long bytesWritten, long totalSize) {
-                            super.onProgress(percent, bytesWritten, totalSize);
-                            Log.d(TAG,"percent " + percent);
-                        }
+    
+    /**
+    *
+    * get service with params
+    * @param url        It's the path you want to have call 
+    * @param tag        this parameter using for find the specific service you have called 
+    * @param callBack   as you can see callBack use to get response of web service and need class of your response for Parse 
+    * you can have different type of response like Text, File Or Json 
+    * for json response you're able to define class of response.
+    * 
+    */
+    restClient.get(url,tag, object : ResponseJsonHandler<WebResult>(WebResult::class.java){
+                override fun onSuccess(result: WebResult) {
+                    Toast.makeText(this@MainActivity,"onSuccess",Toast.LENGTH_LONG).show()
+                }
 
-                        @Override
-                        public void onFailure(int errorCode, String errorMsg) {
-                            Log.d(TAG,"onFailure " + errorMsg);
-                        }
-                    }); 
+                override fun onFailure(errorCode: Int, errorMsg: String) {
+                    Toast.makeText(this@MainActivity,"onFailure",Toast.LENGTH_LONG).show()
+                }
+    })
+    
+    
 ```
                     
 
