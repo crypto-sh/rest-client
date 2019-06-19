@@ -120,6 +120,25 @@ public class RestClient extends BaseClient {
         }
     }
 
+    // POST WITH EXTRA HEADER
+    public void POST(
+            String url,
+            String tag,
+            RequestParams params,
+            ArrayMap<String, String> extraHeaders,
+            ResultHandler responder) {
+        if (checkNetworkConnection(this.appContext.get())) {
+            responder.onFailure(url, ErrorCode.InternetConnectionError);
+            return;
+        }
+        //endregion
+        if (this.authType == AuthType.OAUTH2_AUTH) {
+            POST.basic_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
+        } else {
+            POST.no_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
+        }
+    }
+
     public void GET(
             String url,
             String tag,

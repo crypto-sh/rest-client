@@ -22,9 +22,9 @@ public class AuthModel {
 
     private AuthType authType;
 
-    private ArrayMap<String,String> headers;
+    private ArrayMap<String, String> headers;
 
-    public AuthModel(){
+    public AuthModel() {
 
     }
 
@@ -103,4 +103,5 @@ public class AuthModel {
     public void setHeaders(ArrayMap<String, String> headers) {
         this.headers = headers;
     }
+
 }

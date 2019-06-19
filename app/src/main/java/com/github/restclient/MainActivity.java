@@ -1,22 +1,19 @@
 package com.github.restclient;
 
-
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArrayMap;
+
 import com.github.library.RestClient;
-import com.github.library.enums.AuthType;
 import com.github.library.enums.RequestBodyType;
 import com.github.library.response.ResponseJsonHandler;
 import com.github.library.utils.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.collection.ArrayMap;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,12 +26,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
         initRestClient();
-
 
         findViewById(R.id.text).setOnClickListener(view -> {
             RequestParams params = new RequestParams(RequestBodyType.FormData);
@@ -67,17 +62,22 @@ public class MainActivity extends AppCompatActivity {
     private void initRestClient() {
         ArrayMap<String, String> header = new ArrayMap<>();
 
-        String clientId     = "50ff9f0569f0439087bbc05acb38db43";
-        String clientSecret = "785e208d5eef44a28941bf47146c0873";
+        String clientId = "c3bdf6c5-508f-48ae-9af4-243a24072e31";
+
+        String clientSecret = "LnDbEo3yDDcswKMC3h4H";
+
+        String site = "http://sandbox.vaslapp.com";
+
+        String userName = "android-XoaM8ODAYVcKnB16ob8N";
+
+        String passWord = "DOI0qOIa0KT6ViYmS1k6";
 
         header.put("Content-Type", "application/x-www-form-urlencoded");
 
         restClient = new RestClient.Builder(this)
-                .setAuthorizationOauth2("https://accounts.spotify.com/api/token",clientId,clientSecret)
+                .setAuthorizationOauth2("https://accounts.spotify.com/api/token", clientId, clientSecret)
                 .setDebugEnable(true)
                 .setHeader(header)
                 .build();
-
-
     }
 }

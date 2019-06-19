@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -40,11 +41,11 @@ abstract class BaseClient {
 
     AuthType authType;
 
-    ArrayMap<String,String> headers;
+    ArrayMap<String, String> headers;
 
     int timeMilliSecond = 60;
 
-    boolean debugEnable             = true;
+    boolean debugEnable = true;
 
     private static OkHttpClient instance;
 
@@ -65,16 +66,16 @@ abstract class BaseClient {
     }
 
     public void cancelAllRequest() {
-        for (Call call : getClient(timeMilliSecond,debugEnable).dispatcher().queuedCalls()) {
+        for (Call call : getClient(timeMilliSecond, debugEnable).dispatcher().queuedCalls()) {
             call.cancel();
         }
     }
 
     public void cancelCallWithTag(String tag) {
-        for (Call call : getClient(timeMilliSecond,debugEnable).dispatcher().queuedCalls()) {
+        for (Call call : getClient(timeMilliSecond, debugEnable).dispatcher().queuedCalls()) {
             try {
                 Object item = call.request().tag();
-                if (item != null){
+                if (item != null) {
                     if (item.equals(tag))
                         call.cancel();
                 }
@@ -118,7 +119,7 @@ abstract class BaseClient {
         }
     }
 
-    AuthModel getAuthModel(){
+    AuthModel getAuthModel() {
         AuthModel auth = new AuthModel();
         auth.setClientId(this.clientId);
         auth.setClientSecret(this.clientSecret);
@@ -128,6 +129,27 @@ abstract class BaseClient {
         auth.setUsername(this.username);
         auth.setPassword(this.password);
         auth.setAuthType(this.authType);
+        auth.setHeaders(this.headers);
+        return auth;
+    }
+
+    AuthModel getAuthModel(ArrayMap<String, String> extraHeaders) {
+        AuthModel auth = new AuthModel();
+        auth.setClientId(this.clientId);
+        auth.setClientSecret(this.clientSecret);
+        auth.setSite(this.site);
+        auth.setToken(this.token);
+        auth.setGrantType(this.grantType);
+        auth.setUsername(this.username);
+        auth.setPassword(this.password);
+        auth.setAuthType(this.authType);
+
+        if (extraHeaders != null && extraHeaders.size() > 0) {
+            extraHeaders.putAll((Map<? extends String, ? extends String>) headers);
+            auth.setHeaders(extraHeaders);
+            return auth;
+        }
+
         auth.setHeaders(this.headers);
         return auth;
     }

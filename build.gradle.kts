@@ -1,13 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
 
-    extra.set("kotlinVersion"   , "1.3.20")
-    extra.set("minSdk"          , 15)
-    extra.set("compileSdk"      , 28)
-    extra.set("targetSdk"       , 28)
-    extra.set("buildTools"      , "28.0.3")
-    extra.set("version_code"    , 12)
-    extra.set("version_name"    , "1.1.2")
+    extra.set("kotlinVersion", "1.3.21")
+    extra.set("minSdk", 15)
+    extra.set("compileSdk", 28)
+    extra.set("targetSdk", 28)
+    extra.set("buildTools", "28.0.3")
+    extra.set("version_code", 12)
+    extra.set("version_name", "1.1.2")
 
     repositories {
         google()
