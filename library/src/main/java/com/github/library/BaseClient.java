@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
+import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,19 +50,25 @@ abstract class BaseClient {
 
     private static OkHttpClient instance;
 
-    static synchronized OkHttpClient getClient(int timeOut, boolean enableDebug) {
-        if (instance == null) {
-            instance = new OkHttpClient()
-                    .newBuilder()
-                    .connectTimeout(timeOut, TimeUnit.MILLISECONDS)
-                    .build();
+    static CertificatePinner certificatePinner;
 
-            if (enableDebug) {
-                instance.newBuilder()
-                        .addInterceptor(new LoggingInterceptor())
-                        .build();
-            }
+    static synchronized OkHttpClient getClient(int timeOut, boolean enableDebug) {
+
+        if (instance == null) {
+
+            OkHttpClient.Builder instanceBuilder = new OkHttpClient()
+                    .newBuilder()
+                    .connectTimeout(timeOut, TimeUnit.MILLISECONDS);
+
+            if (enableDebug)
+                instanceBuilder = instance.newBuilder().addInterceptor(new LoggingInterceptor());
+
+            if (certificatePinner != null)
+                instanceBuilder.certificatePinner(certificatePinner);
+
+            instance = instanceBuilder.build();
         }
+
         return instance;
     }
 

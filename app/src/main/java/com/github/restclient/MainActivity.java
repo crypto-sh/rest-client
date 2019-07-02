@@ -31,31 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
         initRestClient();
 
-        findViewById(R.id.text).setOnClickListener(view -> {
-            RequestParams params = new RequestParams(RequestBodyType.FormData);
-            restClient.GET("https://api.spotify.com/v1/tracks/2TpxZ7JUBn3uw46aR7qd6V",
-                    "",
-                    new ResponseJsonHandler() {
-                        @Override
-                        protected void onSuccess(JSONObject result) {
-                            Log.d(TAG, "response " + result);
-                        }
+        findViewById(R.id.buttonSimpleCall).setOnClickListener(view -> {
+            callSimpleApi();
+        });
 
-                        @Override
-                        protected void onSuccess(JSONArray result) {
-                            Log.d(TAG, "response " + result);
-                        }
-
-                        @Override
-                        protected void onSuccess(String result) {
-                            Log.d(TAG, "response " + result);
-                        }
-
-                        @Override
-                        public void onFailure(int errorCode, String errorMsg) {
-                            Log.d(TAG, "onFailure " + errorMsg);
-                        }
-                    });
+        findViewById(R.id.buttonCallWithCP).setOnClickListener(view -> {
+            callCPApi();
         });
     }
 
@@ -79,5 +60,36 @@ public class MainActivity extends AppCompatActivity {
                 .setDebugEnable(true)
                 .setHeader(header)
                 .build();
+    }
+
+    private void callSimpleApi() {
+        RequestParams params = new RequestParams(RequestBodyType.FormData);
+        restClient.GET("https://api.spotify.com/v1/tracks/2TpxZ7JUBn3uw46aR7qd6V",
+                "",
+                new ResponseJsonHandler() {
+                    @Override
+                    protected void onSuccess(JSONObject result) {
+                        Log.d(TAG, "response " + result);
+                    }
+
+                    @Override
+                    protected void onSuccess(JSONArray result) {
+                        Log.d(TAG, "response " + result);
+                    }
+
+                    @Override
+                    protected void onSuccess(String result) {
+                        Log.d(TAG, "response " + result);
+                    }
+
+                    @Override
+                    public void onFailure(int errorCode, String errorMsg) {
+                        Log.d(TAG, "onFailure " + errorMsg);
+                    }
+                });
+    }
+
+    private void callCPApi() {
+
     }
 }

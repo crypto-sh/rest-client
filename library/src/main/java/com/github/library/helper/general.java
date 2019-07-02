@@ -1,7 +1,10 @@
 package com.github.library.helper;
 
+import androidx.collection.ArrayMap;
+
 import java.util.Map;
 
+import okhttp3.CertificatePinner;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.Response;
@@ -21,11 +24,11 @@ public class general {
 
     public static boolean isJsonResponse(Response response) {
         ResponseBody body = response.body();
-        if (body == null){
+        if (body == null) {
             return false;
         }
         MediaType content = body.contentType();
-        if (content == null){
+        if (content == null) {
             return false;
         }
         return content.subtype().equals("json");
@@ -42,5 +45,18 @@ public class general {
 
     private static boolean isValid(String s) {
         return (s != null && s.trim().length() > 0);
+    }
+
+    public static CertificatePinner getCertificatePinner(ArrayMap<String, String> CPKArray) {
+
+        if (CPKArray == null || CPKArray.isEmpty())
+            return null;
+
+        CertificatePinner.Builder certificatePinner = new CertificatePinner.Builder();
+        for (Map.Entry<String, String> entry : CPKArray.entrySet()) {
+            certificatePinner.add(entry.getKey(), entry.getValue());
+        }
+
+        return certificatePinner.build();
     }
 }

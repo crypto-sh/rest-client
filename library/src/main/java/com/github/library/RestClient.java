@@ -11,6 +11,7 @@ import androidx.collection.ArrayMap;
 import com.github.library.Interface.ResultHandler;
 import com.github.library.enums.AuthType;
 import com.github.library.enums.ErrorCode;
+import com.github.library.helper.general;
 import com.github.library.requestMethod.DELETE;
 import com.github.library.requestMethod.GET;
 import com.github.library.requestMethod.POST;
@@ -43,6 +44,8 @@ public class RestClient extends BaseClient {
         private AuthType authType = AuthType.NO_AUTH;
 
         private ArrayMap<String, String> headers = new ArrayMap<>();
+
+        private ArrayMap<String, String> CPKArray = new ArrayMap<>();
 
         public Builder(Context context) {
             this.appContext = context;
@@ -83,9 +86,15 @@ public class RestClient extends BaseClient {
             return this;
         }
 
+        public Builder setCPKArray(ArrayMap<String, String> CPKArray) {
+            this.CPKArray = CPKArray;
+            return this;
+        }
+
         public RestClient build() {
             return new RestClient(this);
         }
+
     }
 
     private RestClient(Builder builder) {
@@ -101,6 +110,8 @@ public class RestClient extends BaseClient {
         this.timeMilliSecond = builder.timeMilliSecond;
         this.authType = builder.authType;
         this.headers = builder.headers;
+
+        RestClient.certificatePinner = general.getCertificatePinner(builder.CPKArray);
     }
 
     public void POST(
