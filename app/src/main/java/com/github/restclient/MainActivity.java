@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        initRestClient();
+        initRestClientWithCP();
 
         findViewById(R.id.buttonSimpleCall).setOnClickListener(view -> {
             callSimpleApi();
@@ -41,13 +41,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRestClient() {
+
         ArrayMap<String, String> header = new ArrayMap<>();
 
         String clientId = "c3bdf6c5-508f-48ae-9af4-243a24072e31";
 
         String clientSecret = "LnDbEo3yDDcswKMC3h4H";
 
-        String site = "http://sandbox.vaslapp.com";
+        String site = "https://sandbox.vaslapp.com";
 
         String userName = "android-XoaM8ODAYVcKnB16ob8N";
 
@@ -55,10 +56,43 @@ public class MainActivity extends AppCompatActivity {
 
         header.put("Content-Type", "application/x-www-form-urlencoded");
 
-        restClient = new RestClient.Builder(this)
-                .setAuthorizationOauth2("https://accounts.spotify.com/api/token", clientId, clientSecret)
+        restClient = new RestClient
+                .Builder(this)
+                .setAuthorizationBasic(userName, passWord)
+                .setAuthorizationOauth2(site + "/oauth/token", clientId, clientSecret)
                 .setDebugEnable(true)
                 .setHeader(header)
+                .setConnectionTimeOut(15000)
+                .build();
+    }
+
+    private void initRestClientWithCP() {
+
+        ArrayMap<String, String> header = new ArrayMap<>();
+
+        String clientId = "c3bdf6c5-508f-48ae-9af4-243a24072e31";
+
+        String clientSecret = "LnDbEo3yDDcswKMC3h4H";
+
+        String site = "https://sandbox.vaslapp.com";
+
+        String userName = "android-XoaM8ODAYVcKnB16ob8N";
+
+        String passWord = "DOI0qOIa0KT6ViYmS1k6";
+
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+
+        ArrayMap<String, String> CPKArray = new ArrayMap<>();
+        CPKArray.put("sandbox.vaslapp.com", "sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=");
+
+        restClient = new RestClient
+                .Builder(this)
+                .setAuthorizationBasic(userName, passWord)
+                .setAuthorizationOauth2(site + "/oauth/token", clientId, clientSecret)
+                .setDebugEnable(true)
+                .setHeader(header)
+                .setCPKArray(CPKArray)
+                .setConnectionTimeOut(15000)
                 .build();
     }
 
@@ -90,6 +124,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void callCPApi() {
+        RequestParams params = new RequestParams(RequestBodyType.FormData);
+        restClient.GET("https://sandbox.vaslapp.com/cache",
+                "",
+                new ResponseJsonHandler() {
+                    @Override
+                    protected void onSuccess(JSONObject result) {
+                        Log.d(TAG, "response " + result);
+                    }
 
+                    @Override
+                    protected void onSuccess(JSONArray result) {
+                        Log.d(TAG, "response " + result);
+                    }
+
+                    @Override
+                    protected void onSuccess(String result) {
+                        Log.d(TAG, "response " + result);
+                    }
+
+                    @Override
+                    public void onFailure(int errorCode, String errorMsg) {
+                        Log.d(TAG, "onFailure " + errorMsg);
+                    }
+                });
     }
 }

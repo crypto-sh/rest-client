@@ -61,7 +61,7 @@ abstract class BaseClient {
                     .connectTimeout(timeOut, TimeUnit.MILLISECONDS);
 
             if (enableDebug)
-                instanceBuilder = instance.newBuilder().addInterceptor(new LoggingInterceptor());
+                instanceBuilder.addInterceptor(new LoggingInterceptor());
 
             if (certificatePinner != null)
                 instanceBuilder.certificatePinner(certificatePinner);
