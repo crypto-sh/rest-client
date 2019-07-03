@@ -25,7 +25,7 @@ latest version on jitpack [![](https://jitpack.io/v/alishatergholi/RestClient.sv
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:rest-client:1.1.2'
+        implementation 'com.github.alishatergholi:rest-client:1.1.3'
     }
 ```
 
