@@ -7,7 +7,7 @@ buildscript {
     extra.set("targetSdk", 28)
     extra.set("buildTools", "28.0.3")
     extra.set("version_code", 12)
-    extra.set("version_name", "1.1.2")
+    extra.set("version_name", "1.1.3")
 
     repositories {
         google()

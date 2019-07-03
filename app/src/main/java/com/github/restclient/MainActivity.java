@@ -44,15 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayMap<String, String> header = new ArrayMap<>();
 
-        String clientId = "c3bdf6c5-508f-48ae-9af4-243a24072e31";
+        String clientId = "";
 
-        String clientSecret = "LnDbEo3yDDcswKMC3h4H";
+        String clientSecret = "";
 
-        String site = "https://sandbox.vaslapp.com";
+        String site = "";
 
-        String userName = "android-XoaM8ODAYVcKnB16ob8N";
+        String userName = "";
 
-        String passWord = "DOI0qOIa0KT6ViYmS1k6";
+        String passWord = "";
 
         header.put("Content-Type", "application/x-www-form-urlencoded");
 
@@ -70,20 +70,20 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayMap<String, String> header = new ArrayMap<>();
 
-        String clientId = "c3bdf6c5-508f-48ae-9af4-243a24072e31";
+        String clientId = "";
 
-        String clientSecret = "LnDbEo3yDDcswKMC3h4H";
+        String clientSecret = "";
 
-        String site = "https://sandbox.vaslapp.com";
+        String site = "";
 
-        String userName = "android-XoaM8ODAYVcKnB16ob8N";
+        String userName = "";
 
-        String passWord = "DOI0qOIa0KT6ViYmS1k6";
+        String passWord = "";
 
         header.put("Content-Type", "application/x-www-form-urlencoded");
 
         ArrayMap<String, String> CPKArray = new ArrayMap<>();
-        CPKArray.put("sandbox.vaslapp.com", "sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=");
+        CPKArray.put("host name", "sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=");
 
         restClient = new RestClient
                 .Builder(this)
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void callCPApi() {
         RequestParams params = new RequestParams(RequestBodyType.FormData);
-        restClient.GET("https://sandbox.vaslapp.com/cache",
+        restClient.GET("",
                 "",
                 new ResponseJsonHandler() {
                     @Override
