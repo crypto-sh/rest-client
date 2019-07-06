@@ -8,7 +8,7 @@ public interface AuthorizationParams {
     String POST_PASSWORD        = "password";
     String POST_CLIENT_ID       = "client_id";
     String POST_CLIENT_SECRET   = "client_secret";
-    String POST_SCOPE           = "scope";
+    String POST_TOKEN           = "token";
     String POST_REFRESH_TOKEN   = "refresh_token";
     String HEADER_CONTENT_TYPE  = "Content-Type";
     String HEADER_AUTHORIZATION = "Authorization";

@@ -3,7 +3,9 @@ package com.github.library.enums;
 public enum AuthType {
 
     NO_AUTH(0),
-    BASIC_AUTH(1);
+    BASIC_AUTH(1),
+    BEARER_AUTH(2),
+    OAUTH2_AUTH(3);
 
     private final int value;
 

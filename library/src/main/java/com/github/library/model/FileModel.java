@@ -1,29 +1,41 @@
 package com.github.library.model;
 
-import android.provider.MediaStore;
+import android.content.Context;
+import android.net.Uri;
+
+import com.github.library.RestClientHelper;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import okhttp3.MediaType;
 
 public class FileModel {
 
     byte[] file;
-
+    String fileName;
     MediaType mimeType;
 
-    String filenName;
+    public FileModel(Context context, File file) throws IOException {
+        WeakReference<Context> weakContext = new WeakReference<>(context);
+        setFileName(RestClientHelper.getFileName(file.getAbsolutePath()));
+        setFile(RestClientHelper.ImageToBytes(file));
+        setMimeType(MediaType.parse(RestClientHelper.getMimeType(weakContext, Uri.fromFile(file))));
+    }
 
-    public FileModel(byte[] file, MediaType mimeType, String filenName) {
+    public FileModel(byte[] file, MediaType mimeType, String fileName) {
         this.file = file;
         this.mimeType = mimeType;
-        this.filenName = filenName;
+        this.fileName = fileName;
     }
 
-    public String getFilenName() {
-        return filenName;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setFilenName(String filenName) {
-        this.filenName = filenName;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public byte[] getFile() {

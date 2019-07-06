@@ -4,7 +4,7 @@ RestClient
 Type-safe HTTP client for Android and Java by Square, Inc.
 
 
-implement Basic Authorization 
+implement Oauth2 Authorization
 
 
 download
@@ -25,7 +25,7 @@ latest version on jitpack [![](https://jitpack.io/v/alishatergholi/RestClient.sv
     }
     
     dependencies {
-        implementation 'com.github.alishatergholi:rest-client:[latest-version](https://github.com/alishatergholi/rest-client/releases/latest)'
+        implementation 'com.github.alishatergholi:rest-client:1.1.3'
     }
 ```
 
@@ -37,9 +37,6 @@ How do i use RestClient
 ```java
     RestClient client = new RestClient
              .Builder(context)
-             /* you can add Accept encoding for encode your response */
-             /* for now we just support gzip */
-             .setAcceptEnconding(EncodingType.GZIP) 
              /* for add custom header you need 
              ArrayMap<String,String> header = new ArrayMap<>();
              header.put("appid","0e8f8fd2-1acb-11e7-8ab0-ac162d7938f0");

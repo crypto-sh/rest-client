@@ -1,15 +1,12 @@
 package com.github.library.Interface;
 
 
-
-
 import com.github.library.enums.ErrorCode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPInputStream;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -23,39 +20,21 @@ public abstract class ResultHandler {
     public void onResultHandler(Response response){
         String url = response.request().url().url().toString();
         if (response.body() != null && response.isSuccessful()) {
-            InputStream inputStream = null;
-            String contentEncodingHeader = response.header("Content-Encoding");
             ResponseBody body = response.body();
-            if (body != null) {
-                if (contentEncodingHeader != null && contentEncodingHeader.equals("gzip")) {
-                    try {
-                        inputStream = new GZIPInputStream(body.byteStream());
-                    } catch (IOException e) {
-                        this.onFailure(url,ErrorCode.IOException);
-                    }
-                } else {
-                    inputStream = body.byteStream();
+            InputStream inputStream = body.byteStream();
+            try {
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                int next = inputStream.read();
+                while (next > -1){
+                    outputStream.write(next);
+                    next = inputStream.read();
                 }
-                if (inputStream != null){
-                    try {
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        int next = inputStream.read();
-                        while (next > -1){
-                            outputStream.write(next);
-                            next = inputStream.read();
-                        }
-                        outputStream.flush();
-                        byte[] result = outputStream.toByteArray();
-                        outputStream.close();
-                        this.onSuccess(url,result);
-                    } catch (IOException e) {
-                        this.onFailure(url,ErrorCode.IOException);
-                    }
-                }else {
-                    this.onFailure(url,ErrorCode.ParseException);
-                }
-            } else {
-                this.onFailure(url,ErrorCode.NullPointerException);
+                outputStream.flush();
+                byte[] result = outputStream.toByteArray();
+                outputStream.close();
+                this.onSuccess(url,result);
+            } catch (IOException e) {
+                this.onFailure(url,ErrorCode.IOException);
             }
         } else {
             this.onFailure(url,ErrorCode.Parse(response.code()));

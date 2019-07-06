@@ -15,10 +15,8 @@ public abstract class baseMethod {
         return String.valueOf(TimeUnit.MILLISECONDS.toSeconds(duration)) + "." + String.valueOf(TimeUnit.MILLISECONDS.toMillis(duration) % 1000).substring(0, 1);
     }
 
-    protected static Long getTimeMillisecond() {
+    private static Long getTimeMillisecond() {
         return System.currentTimeMillis();
     }
-
-
 
 }
