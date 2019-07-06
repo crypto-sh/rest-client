@@ -29,14 +29,15 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        initRestClientWithCP();
+        //initRestClientWithCP();
+        initRestSamlple();
 
         findViewById(R.id.buttonSimpleCall).setOnClickListener(view -> {
             callSimpleApi();
         });
 
         findViewById(R.id.buttonCallWithCP).setOnClickListener(view -> {
-            callCPApi();
+            callFourSquare();
         });
     }
 
@@ -61,6 +62,28 @@ public class MainActivity extends AppCompatActivity {
                 .setAuthorizationBasic(userName, passWord)
                 .setAuthorizationOauth2(site + "/oauth/token", clientId, clientSecret)
                 .setDebugEnable(true)
+                .setHeader(header)
+                .setConnectionTimeOut(15000)
+                .build();
+    }
+
+    private void initRestSamlple(){
+        ArrayMap<String, String> header = new ArrayMap<>();
+
+        String clientId = "";
+
+        String clientSecret = "";
+
+        String site = "";
+
+        String userName = "";
+
+        String passWord = "";
+
+        header.put("Content-Type", "application/x-www-form-urlencoded");
+
+        restClient = new RestClient
+                .Builder(this)
                 .setHeader(header)
                 .setConnectionTimeOut(15000)
                 .build();
@@ -99,6 +122,33 @@ public class MainActivity extends AppCompatActivity {
     private void callSimpleApi() {
         RequestParams params = new RequestParams(RequestBodyType.FormData);
         restClient.GET("https://api.spotify.com/v1/tracks/2TpxZ7JUBn3uw46aR7qd6V",
+                "",
+                new ResponseJsonHandler() {
+                    @Override
+                    protected void onSuccess(JSONObject result) {
+                        Log.d(TAG, "response " + result);
+                    }
+
+                    @Override
+                    protected void onSuccess(JSONArray result) {
+                        Log.d(TAG, "response " + result);
+                    }
+
+                    @Override
+                    protected void onSuccess(String result) {
+                        Log.d(TAG, "response " + result);
+                    }
+
+                    @Override
+                    public void onFailure(int errorCode, String errorMsg) {
+                        Log.d(TAG, "onFailure " + errorMsg);
+                    }
+                });
+    }
+
+    private void callFourSquare() {
+        RequestParams params = new RequestParams(RequestBodyType.FormData);
+        restClient.GET("https://api.foursquare.com/v2/venues/explore?client_id=4MZ41IL2EPQQ5IERZHXKDWV2YGEWOCAFOXNAYOB4C3NIMXPH&client_secret=KPMQITFTATZGBHSXIHBADUKSO1VWEQS1URFN51LMDZTAIQUA&v=20190704&ll=35.703338,51.353264&offset=20&limit=10",
                 "",
                 new ResponseJsonHandler() {
                     @Override
