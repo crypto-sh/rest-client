@@ -200,23 +200,22 @@ public class RequestParams {
             case Binary:
                 return RequestBody.create(MediaType.parse(contentType), binaryInput);
             case MultiPart:
-                MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
                 for (String key : getParams().keySet()) {
-                    builder.addFormDataPart(key, (String) Objects.requireNonNull(getParams().get(key)));
+                    requestBody.addFormDataPart(key, (String) Objects.requireNonNull(getParams().get(key)));
                 }
                 for (String key : getParamsArray().keySet()) {
                     for (Object item : Objects.requireNonNull(getParamsArray().get(key))) {
-                        builder.addFormDataPart(key, (String) item);
+                        requestBody.addFormDataPart(key, (String) item);
                     }
                 }
-                LinkedHashMap<String, FileModel> fileParams = getFileParams();
-                for (String key : fileParams.keySet()) {
+                for (String key : getFileParams().keySet()) {
                     FileModel uploadFile = fileParams.get(key);
                     if (uploadFile != null) {
-                        builder.addFormDataPart(key, uploadFile.getFileName(), RequestBody.create(uploadFile.getMimeType(), uploadFile.getFile()));
+                        requestBody.addFormDataPart(key, uploadFile.getFileName(), RequestBody.create(uploadFile.getMimeType(), uploadFile.getFile()));
                     }
                 }
-                return builder.build();
+                return requestBody.build();
             case FormData:
             case FormUrlEncode:
             default: {

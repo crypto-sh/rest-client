@@ -3,6 +3,10 @@ package com.github.library.requestMethod;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.collection.ArrayMap;
+
 import com.github.library.Interface.ResultHandler;
 import com.github.library.enums.AuthType;
 import com.github.library.enums.ErrorCode;
@@ -19,9 +23,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.collection.ArrayMap;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -39,17 +40,20 @@ public class POST extends baseMethod {
             @NonNull RequestParams params,
             @NonNull ResultHandler responder) {
         try {
-            RequestBody requestBody;
-            if (params.getType() == RequestBodyType.MultiPart)
-                requestBody = new RequestBodyProgressive(params.getRequestForm(), (bytesWritten, contentLength) ->
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            double percent = (double) bytesWritten / (double) contentLength;
-                            percent = Math.floor(percent * 100) / 1;
-                            responder.onProgress(percent, bytesWritten, contentLength);
-                        }));
-            else {
-                requestBody = params.getRequestForm();
+
+            RequestBody requestBody = params.getRequestForm();
+
+            if (params.getType() == RequestBodyType.MultiPart) {
+                requestBody = new RequestBodyProgressive(requestBody, new RequestBodyProgressive.Listener() {
+                    @Override
+                    public void onRequestProgress(long bytesWritten, long contentLength) {
+                        double percent = (double) bytesWritten / (double) contentLength;
+                        percent = Math.floor(percent * 100) / 1;
+                        responder.onProgress(percent, bytesWritten, contentLength);
+                    }
+                });
             }
+
             Request.Builder request = new Request.Builder()
                     .url(url)
                     .tag(tag)

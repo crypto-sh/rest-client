@@ -1,7 +1,5 @@
 package com.github.library.enums;
 
-
-
 public enum RequestBodyType {
 
     FormData(0),
@@ -13,7 +11,7 @@ public enum RequestBodyType {
 
     int value = -1;
 
-    RequestBodyType(int value){
+    RequestBodyType(int value) {
         this.value = value;
     }
 
@@ -29,5 +27,4 @@ public enum RequestBodyType {
         }
         return FormData;
     }
-
 }

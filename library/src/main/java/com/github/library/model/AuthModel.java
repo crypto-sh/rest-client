@@ -1,12 +1,10 @@
 package com.github.library.model;
 
-
 import androidx.collection.ArrayMap;
 
 import com.github.library.enums.AuthType;
 
 import okhttp3.Credentials;
-
 
 public class AuthModel {
 

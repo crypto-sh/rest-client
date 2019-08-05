@@ -3,7 +3,6 @@
  */
 package com.github.library;
 
-
 import android.content.Context;
 
 import androidx.collection.ArrayMap;

@@ -20,7 +20,7 @@ public abstract class ResponseFileHandler extends ResultHandler {
     @Override
     public void onProgress(final double percent, final long bytesWritten, final long totalSize) {
         super.onProgress(percent, bytesWritten, totalSize);
-        new Handler(Looper.getMainLooper()).post(() -> onProgress(percent, bytesWritten, totalSize));
+        new Handler(Looper.getMainLooper()).post(() -> onProgress(percent, bytesWritten, totalSize, 0));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.library.enums;
 
+
 public class AuthState {
 
     public static final int ACCESS_TOKEN = 0;

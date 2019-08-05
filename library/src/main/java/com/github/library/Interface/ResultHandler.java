@@ -1,6 +1,5 @@
 package com.github.library.Interface;
 
-
 import com.github.library.enums.ErrorCode;
 
 import java.io.ByteArrayOutputStream;
@@ -11,13 +10,13 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-
 /**
  * Created by alishatergholi on 12/16/17.
  */
+
 public abstract class ResultHandler {
 
-    public void onResultHandler(Response response){
+    public void onResultHandler(Response response) {
         String url = response.request().url().url().toString();
         if (response.body() != null && response.isSuccessful()) {
             ResponseBody body = response.body();
@@ -25,29 +24,32 @@ public abstract class ResultHandler {
             try {
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 int next = inputStream.read();
-                while (next > -1){
+                while (next > -1) {
                     outputStream.write(next);
                     next = inputStream.read();
                 }
                 outputStream.flush();
                 byte[] result = outputStream.toByteArray();
                 outputStream.close();
-                this.onSuccess(url,result);
+                this.onSuccess(url, result);
             } catch (IOException e) {
-                this.onFailure(url,ErrorCode.IOException);
+                this.onFailure(url, ErrorCode.IOException);
             }
         } else {
-            this.onFailure(url,ErrorCode.Parse(response.code()));
+            this.onFailure(url, ErrorCode.Parse(response.code()));
         }
     }
 
-    protected abstract void onSuccess(String url,byte[] result);
+    protected abstract void onSuccess(String url, byte[] result);
 
-    public void onProgress(double percent,long bytesWritten,long totalSize){
+    public void onProgress(double percent, long bytesWritten, long totalSize) {
 
     }
 
-    public abstract void onFailure(String url,ErrorCode errorCode);
+    protected void onProgress(final double percent, final long bytesWritten, final long totalSize, final int speed) {
+    }
+
+    public abstract void onFailure(String url, ErrorCode errorCode);
 
     protected static String calcTime(Long startTime) {
         Long duration = getTimeMillisecond() - startTime;
@@ -71,4 +73,5 @@ public abstract class ResultHandler {
         }
         return modifiedFileSize;
     }
+
 }

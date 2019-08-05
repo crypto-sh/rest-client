@@ -1,5 +1,6 @@
 package com.github.library.enums;
 
+
 public enum AuthType {
 
     NO_AUTH(0),

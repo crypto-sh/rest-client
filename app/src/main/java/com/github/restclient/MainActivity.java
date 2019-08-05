@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.buttonCallWithCP).setOnClickListener(view -> {
             callFourSquare();
         });
+
     }
 
     private void initRestClient() {

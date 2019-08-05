@@ -1,9 +1,6 @@
 package com.github.library.enums;
 
 
-/**
- * Created by alishatergholi on 2/17/18.
- */
 public enum ErrorCode {
 
     AuthorizationException(401,"Authorization Exception"),
