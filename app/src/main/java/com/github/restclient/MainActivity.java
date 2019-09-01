@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
     }
 
-    private void initRestSamlple(){
+    private void initRestSamlple() {
         ArrayMap<String, String> header = new ArrayMap<>();
 
         String clientId = "";
