@@ -60,6 +60,7 @@ abstract class BaseClient {
 
             OkHttpClient.Builder instanceBuilder = new OkHttpClient()
                     .newBuilder()
+                    .readTimeout(readTime, TimeUnit.MILLISECONDS)
                     .connectTimeout(timeOut, TimeUnit.MILLISECONDS);
 
             if (enableDebug)
