@@ -6,8 +6,8 @@ buildscript {
     extra.set("compileSdk", 28)
     extra.set("targetSdk", 28)
     extra.set("buildTools", "28.0.3")
-    extra.set("version_code", 15)
-    extra.set("version_name", "1.1.6")
+    extra.set("version_code", 16)
+    extra.set("version_name", "1.1.7")
 
     repositories {
         google()
