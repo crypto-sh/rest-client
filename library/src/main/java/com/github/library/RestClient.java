@@ -38,6 +38,8 @@ public class RestClient extends BaseClient {
 
         private Integer timeMilliSecond = 60;
 
+        private Integer timeRead        = 30;
+
         private boolean debugEnable = true;
 
         private AuthType authType = AuthType.NO_AUTH;
@@ -70,8 +72,13 @@ public class RestClient extends BaseClient {
             return this;
         }
 
-        public Builder setConnectionTimeOut(Integer timeMiliSecond) {
-            this.timeMilliSecond = timeMiliSecond;
+        public Builder setConnectionTimeOut(Integer timeMilliSecond) {
+            this.timeMilliSecond = timeMilliSecond;
+            return this;
+        }
+
+        public Builder setReadTimeOut(Integer timeMilliSecond) {
+            this.timeMilliSecond = timeMilliSecond;
             return this;
         }
 
@@ -124,9 +131,9 @@ public class RestClient extends BaseClient {
         }
         //endregion
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            POST.basic_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(), params, responder);
+            POST.basic_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
         } else {
-            POST.no_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(), params, responder);
+            POST.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
         }
     }
 
@@ -143,9 +150,9 @@ public class RestClient extends BaseClient {
         }
         //endregion
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            POST.basic_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
+            POST.basic_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
         } else {
-            POST.no_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
+            POST.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
         }
     }
 
@@ -160,9 +167,9 @@ public class RestClient extends BaseClient {
 
         //endregion
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            GET.oauth2_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(), responder);
+            GET.oauth2_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), responder);
         } else {
-            GET.no_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(), responder);
+            GET.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), responder);
         }
     }
 
@@ -178,9 +185,9 @@ public class RestClient extends BaseClient {
         }
 
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            DELETE.basic_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(), params, responder);
+            DELETE.basic_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
         } else {
-            DELETE.no_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(), params, responder);
+            DELETE.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
         }
     }
 
@@ -196,9 +203,9 @@ public class RestClient extends BaseClient {
         }
 
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            PUT.basic_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(), params, responder);
+            PUT.basic_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
         } else {
-            PUT.no_Auth(getClient(timeMilliSecond, debugEnable), url, tag, getAuthModel(), params, responder);
+            PUT.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
         }
     }
 }

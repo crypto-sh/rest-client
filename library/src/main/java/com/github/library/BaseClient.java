@@ -46,13 +46,15 @@ abstract class BaseClient {
 
     int timeMilliSecond = 60;
 
+    int timeRead        = 30;
+
     boolean debugEnable = true;
 
     private static OkHttpClient instance;
 
     static CertificatePinner certificatePinner;
 
-    static synchronized OkHttpClient getClient(int timeOut, boolean enableDebug) {
+    static synchronized OkHttpClient getClient(int timeOut, int readTime, boolean enableDebug) {
 
         if (instance == null) {
 
@@ -73,13 +75,13 @@ abstract class BaseClient {
     }
 
     public void cancelAllRequest() {
-        for (Call call : getClient(timeMilliSecond, debugEnable).dispatcher().queuedCalls()) {
+        for (Call call : getClient(timeMilliSecond, timeRead, debugEnable).dispatcher().queuedCalls()) {
             call.cancel();
         }
     }
 
     public void cancelCallWithTag(String tag) {
-        for (Call call : getClient(timeMilliSecond, debugEnable).dispatcher().queuedCalls()) {
+        for (Call call : getClient(timeMilliSecond, timeRead, debugEnable).dispatcher().queuedCalls()) {
             try {
                 Object item = call.request().tag();
                 if (item != null) {
