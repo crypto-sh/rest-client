@@ -40,6 +40,8 @@ public class RestClient extends BaseClient {
 
         private Integer timeRead        = 30;
 
+        private Integer timeWrite        = 30;
+
         private boolean debugEnable = true;
 
         private AuthType authType = AuthType.NO_AUTH;
@@ -78,7 +80,12 @@ public class RestClient extends BaseClient {
         }
 
         public Builder setReadTimeOut(Integer timeMilliSecond) {
-            this.timeMilliSecond = timeMilliSecond;
+            this.timeRead = timeMilliSecond;
+            return this;
+        }
+
+        public Builder setWriteTimeOut(Integer timeMilliSecond) {
+            this.timeWrite = timeMilliSecond;
             return this;
         }
 
@@ -114,6 +121,8 @@ public class RestClient extends BaseClient {
         this.password = builder.password;
         this.debugEnable = builder.debugEnable;
         this.timeMilliSecond = builder.timeMilliSecond;
+        this.timeRead = builder.timeRead;
+        this.timeWrite = builder.timeWrite;
         this.authType = builder.authType;
         this.headers = builder.headers;
 
@@ -131,9 +140,9 @@ public class RestClient extends BaseClient {
         }
         //endregion
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            POST.basic_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
+            POST.basic_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(), params, responder);
         } else {
-            POST.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
+            POST.no_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(), params, responder);
         }
     }
 
@@ -150,9 +159,9 @@ public class RestClient extends BaseClient {
         }
         //endregion
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            POST.basic_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
+            POST.basic_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
         } else {
-            POST.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
+            POST.no_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(extraHeaders), params, responder);
         }
     }
 
@@ -167,9 +176,9 @@ public class RestClient extends BaseClient {
 
         //endregion
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            GET.oauth2_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), responder);
+            GET.oauth2_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(), responder);
         } else {
-            GET.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), responder);
+            GET.no_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(), responder);
         }
     }
 
@@ -185,9 +194,9 @@ public class RestClient extends BaseClient {
         }
 
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            DELETE.basic_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
+            DELETE.basic_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(), params, responder);
         } else {
-            DELETE.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
+            DELETE.no_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(), params, responder);
         }
     }
 
@@ -203,9 +212,9 @@ public class RestClient extends BaseClient {
         }
 
         if (this.authType == AuthType.OAUTH2_AUTH) {
-            PUT.basic_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
+            PUT.basic_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(), params, responder);
         } else {
-            PUT.no_Auth(getClient(timeMilliSecond, timeRead, debugEnable), url, tag, getAuthModel(), params, responder);
+            PUT.no_Auth(getClient(timeMilliSecond, timeRead,timeWrite, debugEnable), url, tag, getAuthModel(), params, responder);
         }
     }
 }

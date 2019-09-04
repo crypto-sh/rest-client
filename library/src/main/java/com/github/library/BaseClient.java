@@ -48,20 +48,23 @@ abstract class BaseClient {
 
     int timeRead        = 30;
 
+    int timeWrite       = 30;
+
     boolean debugEnable = true;
 
     private static OkHttpClient instance;
 
     static CertificatePinner certificatePinner;
 
-    static synchronized OkHttpClient getClient(int timeOut, int readTime, boolean enableDebug) {
+    static synchronized OkHttpClient getClient(int timeOut, int readTime,int timeWrite, boolean enableDebug) {
 
         if (instance == null) {
 
             OkHttpClient.Builder instanceBuilder = new OkHttpClient()
                     .newBuilder()
                     .readTimeout(readTime, TimeUnit.MILLISECONDS)
-                    .connectTimeout(timeOut, TimeUnit.MILLISECONDS);
+                    .connectTimeout(timeOut, TimeUnit.MILLISECONDS)
+                    .writeTimeout(timeWrite,TimeUnit.MILLISECONDS);
 
             if (enableDebug)
                 instanceBuilder.addInterceptor(new LoggingInterceptor());
@@ -76,13 +79,13 @@ abstract class BaseClient {
     }
 
     public void cancelAllRequest() {
-        for (Call call : getClient(timeMilliSecond, timeRead, debugEnable).dispatcher().queuedCalls()) {
+        for (Call call : getClient(timeMilliSecond, timeRead,timeWrite, debugEnable).dispatcher().queuedCalls()) {
             call.cancel();
         }
     }
 
     public void cancelCallWithTag(String tag) {
-        for (Call call : getClient(timeMilliSecond, timeRead, debugEnable).dispatcher().queuedCalls()) {
+        for (Call call : getClient(timeMilliSecond, timeRead,timeWrite, debugEnable).dispatcher().queuedCalls()) {
             try {
                 Object item = call.request().tag();
                 if (item != null) {

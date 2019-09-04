@@ -6,8 +6,8 @@ buildscript {
     extra.set("compileSdk", 28)
     extra.set("targetSdk", 28)
     extra.set("buildTools", "28.0.3")
-    extra.set("version_code", 16)
-    extra.set("version_name", "1.1.7")
+    extra.set("version_code", 17)
+    extra.set("version_name", "1.1.8")
 
     repositories {
         google()
@@ -15,7 +15,7 @@ buildscript {
         maven("https://jitpack.io")
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.4.1")
+        classpath("com.android.tools.build:gradle:3.5.0")
         classpath("com.github.dcendents:android-maven-gradle-plugin:2.1")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

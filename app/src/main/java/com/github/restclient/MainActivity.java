@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 .setDebugEnable(true)
                 .setHeader(header)
                 .setConnectionTimeOut(15000)
+                .setWriteTimeOut(15000)
+                .setReadTimeOut(15000)
                 .build();
     }
 
@@ -87,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
                 .Builder(this)
                 .setHeader(header)
                 .setConnectionTimeOut(15000)
+                 .setWriteTimeOut(15000)
+                .setReadTimeOut(15000)
                 .build();
     }
 
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void callSimpleApi() {
         RequestParams params = new RequestParams(RequestBodyType.FormData);
-        restClient.GET("https://api.spotify.com/v1/tracks/2TpxZ7JUBn3uw46aR7qd6V",
+        restClient.GET("http://nestle.koosha.ir/User/UserLogin.ashx?Username=MahdiPiran&Password=12345678&",
                 "",
                 new ResponseJsonHandler() {
                     @Override
